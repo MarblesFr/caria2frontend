@@ -1,0 +1,14 @@
+.cariaLogo{
+  width: 100%;
+  margin: 0 1% 0 5%;
+}
+
+.cariaLogoContainer{
+  width: 6%;
+  margin-right: 3%;
+}
+
+li{
+  margin-right: 15%;
+  font-size: 120%;
+}
