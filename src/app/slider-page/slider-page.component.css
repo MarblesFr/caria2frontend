@@ -1,0 +1,13 @@
+.outputWindow{
+  background-color: darkgray;
+}
+
+.sliderWindow{
+  background-color: darkgray;
+  margin: 0 3% 0 3%;
+  height: 45%;
+}
+
+.top-half{
+  height: 45%;
+}

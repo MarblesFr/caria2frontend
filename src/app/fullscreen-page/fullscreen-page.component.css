@@ -1,0 +1,28 @@
+.outputImage{
+  width: 100%;
+  height: 33%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+button{
+  width: 30%;
+  height: 30%;
+  margin: 0 10% 0 10%;
+  text-align: center;
+  transition: all 0.2s;
+  background: gray;
+  color: white;
+  display: inline-block;
+  border-radius: 2em;
+  box-sizing: border-box;
+  padding: 1% 0 1% 0;
+}
+button:hover{
+  background-color: darkgray;
+}
+
+.car-container{
+  width: 80%;
+  margin: 0 10% 0 10%;
+}
