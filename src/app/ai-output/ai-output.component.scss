@@ -1,0 +1,10 @@
+.imageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .outputImage {
+    width: 70%;
+    height: auto;
+  }
+}

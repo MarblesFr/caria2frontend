@@ -1,1 +1,3 @@
-<img class="outputImage" src="../../assets/testcar.png" alt="AI-Output image" />
+<div class="imageContainer">
+  <img class="outputImage" [src]="(dataUrl$ | async)" alt="AI-Output image" />
+</div>
