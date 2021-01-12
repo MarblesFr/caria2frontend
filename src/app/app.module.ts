@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SliderPageComponent } from './slider-page/slider-page.component';
 import { FullscreenPageComponent } from './fullscreen-page/fullscreen-page.component';
 import { AiOutputComponent } from './ai-output/ai-output.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AiOutputComponent } from './ai-output/ai-output.component';
   imports: [
     BrowserModule,
     NgbModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
