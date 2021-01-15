@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
 import {RootStoreModule} from './services/root-store.module';
+import {SliderWindowComponent} from './components/sliders/slider-window/slider-window.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {RootStoreModule} from './services/root-store.module';
     CanvasPageComponent,
     SliderPageComponent,
     FullscreenPageComponent,
-    AiOutputComponent
+    AiOutputComponent,
+    SliderWindowComponent,
   ],
   imports: [
     BrowserModule,
