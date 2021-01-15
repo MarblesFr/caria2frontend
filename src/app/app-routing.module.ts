@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CanvasPageComponent} from './canvas-page/canvas-page.component';
-import {SliderPageComponent} from './slider-page/slider-page.component';
-import {FullscreenPageComponent} from './fullscreen-page/fullscreen-page.component';
+import {CanvasPageComponent} from './components/canvas-page/canvas-page.component';
+import {SliderPageComponent} from './components/sliders/slider-page/slider-page.component';
+import {FullscreenPageComponent} from './components/fullscreen-page/fullscreen-page.component';
 
 const routes: Routes = [
   {path: 'canvas', component: CanvasPageComponent},
