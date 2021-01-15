@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { CariaService } from '../../services/caria-service/caria.service';
+import {Component, OnInit} from '@angular/core';
+import {CariaService} from '../../services/caria-service/caria.service';
+import {Observable} from 'rxjs';
+import {SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'caria-ai-output',
@@ -10,9 +12,9 @@ export class AiOutputComponent implements OnInit {
 
   constructor(private cariaService: CariaService) { }
 
-  dataUrl$ = this.cariaService.getCar();
+  dataUrl$: Observable<SafeUrl>;
 
   ngOnInit(): void {
+    this.dataUrl$ = this.cariaService.getCar();
   }
-
 }
