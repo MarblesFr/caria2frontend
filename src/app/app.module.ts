@@ -12,7 +12,7 @@ import { AiOutputComponent } from './components/ai-output/ai-output.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
-import { StoreModule } from '@ngrx/store';
+import {RootStoreModule} from './services/root-store.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { StoreModule } from '@ngrx/store';
     HttpClientModule,
     BrowserAnimationsModule,
     MatSliderModule,
-    StoreModule.forRoot({}, {}),
+    RootStoreModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
