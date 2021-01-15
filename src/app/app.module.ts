@@ -2,14 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CanvasPageComponent } from './canvas-page/canvas-page.component';
+import { CanvasPageComponent } from './components/canvas-page/canvas-page.component';
 import { AppRoutingModule } from './app-routing.module';
-import { SliderPageComponent } from './slider-page/slider-page.component';
-import { FullscreenPageComponent } from './fullscreen-page/fullscreen-page.component';
-import { AiOutputComponent } from './ai-output/ai-output.component';
+import { SliderPageComponent } from './components/sliders/slider-page/slider-page.component';
+import { FullscreenPageComponent } from './components/fullscreen-page/fullscreen-page.component';
+import { AiOutputComponent } from './components/ai-output/ai-output.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSliderModule} from '@angular/material/slider';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,9 @@ import { HttpClientModule } from '@angular/common/http';
     NgbModule,
     AppRoutingModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    StoreModule.forRoot({}, {}),
   ],
   providers: [],
   bootstrap: [AppComponent]

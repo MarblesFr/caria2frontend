@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CariaService } from '../caria-service/caria.service';
+import { CariaService } from '../../services/caria-service/caria.service';
 
 @Component({
   selector: 'caria-ai-output',
