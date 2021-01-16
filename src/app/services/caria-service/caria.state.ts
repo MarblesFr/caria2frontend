@@ -1,4 +1,4 @@
-import {SLIDER_COUNT} from './caria.config';
+import {randomValues} from '../../util/caria.util';
 
 export const cariaFeatureKey = 'caria';
 
@@ -7,5 +7,5 @@ export interface State {
 }
 
 export const initialState: State = {
-  values: Array(SLIDER_COUNT).fill(0),
+  values: randomValues(),
 };

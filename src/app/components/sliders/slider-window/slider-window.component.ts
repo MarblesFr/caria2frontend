@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {CariaActions, CariaSelectors} from '../../../services/caria-service';
-import {SLIDER_COUNT} from '../../../services/caria-service/caria.config';
+import {SLIDER_COUNT, VALUE_RANGE} from '../../../services/caria-service/caria.config';
 
 @Component({
   selector: 'caria-slider-window',
@@ -12,6 +12,7 @@ import {SLIDER_COUNT} from '../../../services/caria-service/caria.config';
 export class SliderWindowComponent implements OnInit {
 
   SLIDER_COUNT = SLIDER_COUNT;
+  VALUE_RANGE = VALUE_RANGE;
 
   @Input()
   values$: Observable<number[]>;

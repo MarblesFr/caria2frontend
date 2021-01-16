@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {CariaActions} from '../../services/caria-service';
 
 @Component({
   selector: 'caria-fullscreen-page',
@@ -9,13 +11,15 @@ import {Router} from '@angular/router';
 export class FullscreenPageComponent implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private readonly store$: Store
   ) { }
 
   ngOnInit(): void {
   }
 
   generateNewOutput(): void {
+    this.store$.dispatch(CariaActions.randomizeValues());
   }
 
   startEditing(): void {
