@@ -1,5 +1,19 @@
-<div class="row p-4" *ngIf="values$ | async as values">
-  <div *ngFor="let value of [].constructor(SLIDER_COUNT); index as i">
-    <mat-slider [min]="-VALUE_RANGE" [max]="VALUE_RANGE" step="0.05" [value]="values[i]" (valueChange)="updateSlider(i, $event)"></mat-slider>
+<div class="container p-4 align-middle" *ngIf="values$ | async as values">
+  <div class="d-flex justify-content-center" *ngVar="(SLIDER_COUNT / pages) as perPageCount">
+    <div class="slider-item-container" *ngFor="let value of [].constructor(perPageCount); index as i">
+      <div *ngVar="perPageCount * currentPage + i as index" class="text-center">
+        <mat-slider class="slider-item" [min]="-VALUE_RANGE" [max]="VALUE_RANGE" step="0.1" [value]="values[index]" (input)="updateSlider(index, $event.value)" vertical></mat-slider>
+        <p>{{ index +1 }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center align-bottom p-2">
+    <button class="disable-focus" type="button" mat-button mat-icon-button (click)="previousPage()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_left</mat-icon>
+    </button>
+    <p class="align-self-end">{{ currentPage + 1 }} / {{ pages }}</p>
+    <button class="disable-focus" type="button" mat-button mat-icon-button (click)="nextPage()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_right</mat-icon>
+    </button>
   </div>
 </div>

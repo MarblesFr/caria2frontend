@@ -14,6 +14,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
 import {RootStoreModule} from './services/root-store.module';
 import {SliderWindowComponent} from './components/sliders/slider-window/slider-window.component';
+import {MatButtonModule} from '@angular/material/button';
+import {VarDirective} from './util/ng-var.directive';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,7 @@ import {SliderWindowComponent} from './components/sliders/slider-window/slider-w
     FullscreenPageComponent,
     AiOutputComponent,
     SliderWindowComponent,
+    VarDirective,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +36,8 @@ import {SliderWindowComponent} from './components/sliders/slider-window/slider-w
     HttpClientModule,
     BrowserAnimationsModule,
     MatSliderModule,
+    MatButtonModule,
+    MatIconModule,
     RootStoreModule.forRoot(),
   ],
   providers: [],
