@@ -1,6 +1,7 @@
 import {createReducer, on} from '@ngrx/store';
-import {updateValue, updateValues} from './caria.actions';
+import {randomizeValues, updateValue, updateValues} from './caria.actions';
 import {initialState, State} from './caria.state';
+import {randomValues} from '../../util/caria.util';
 
 const cariaReducer = createReducer(
   initialState,
@@ -11,6 +12,9 @@ const cariaReducer = createReducer(
     const values = state.values.slice();
     values[action.index] = action.value;
     return {values};
+  }),
+  on(randomizeValues, () => {
+    return {values: randomValues()};
   }),
 );
 
