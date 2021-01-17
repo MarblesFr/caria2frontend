@@ -17,7 +17,9 @@ button{
   border-radius: 2em;
   box-sizing: border-box;
   padding: 1% 0 1% 0;
+  outline: none;
 }
+
 button:hover{
   background-color: darkgray;
 }
