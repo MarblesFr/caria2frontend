@@ -1,0 +1,23 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+
+before_script:
+  - npm install --silent
+
+cache:
+  paths:
+    - ./node_modules
+
+build:
+  script:
+    - npm run build:gitlab
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  script:
+    - npm run lint

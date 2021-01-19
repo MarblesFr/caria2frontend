@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {EventEmitter} from '@angular/core';
 
 @Component({
@@ -25,7 +25,6 @@ export class CanvasToolsComponent implements OnInit {
   }
 
   clearCanvas(){
-    console.log("Request to clear canvas");
     this.clearCanvasRequest.emit();
   }
 

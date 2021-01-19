@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:gitlab": "ng build — prod — caria2ui /angular-gitlab-ci/",
-    "test:chromeHeadless": "npm run test — — browsers ChromeHeadless — single-run"
+    "build:gitlab": "ng build",
+    "test:chromeHeadless": "npm run test --browsers ChromeHeadless -single-run"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +33,7 @@
     "ngx-color-picker": "^11.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
+    "webdriver-manager": "^12.1.8",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

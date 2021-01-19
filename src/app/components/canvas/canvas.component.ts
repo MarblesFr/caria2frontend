@@ -1,8 +1,8 @@
 import {
-  Component, Input, ElementRef, AfterViewInit, ViewChild, HostListener
+  Component, Input, ElementRef, AfterViewInit, ViewChild, HostListener, OnInit
 } from '@angular/core';
 import {fromEvent, Observable} from 'rxjs';
-import {switchMap, takeUntil, pairwise, map} from 'rxjs/operators';
+import {switchMap, takeUntil, pairwise} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions, CariaSelectors} from '../../services/caria-service';
 import {CariaService} from '../../services/caria-service/caria.service';
@@ -12,9 +12,8 @@ import {CariaService} from '../../services/caria-service/caria.service';
   template: '<canvas #canvas></canvas>',
   styles: ['canvas { border: 1px solid #000; }']
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements OnInit, AfterViewInit {
 
-  @Input()
   values$: Observable<number[]>;
 
   downscaleWidthFactor: number = 2 * 1.1;
@@ -39,7 +38,7 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event?) {
+  onResize() {
     this.width = window.innerWidth / this.downscaleWidthFactor;
     this.height = this.width / 3;
     if (this.canvaselement != null) {
@@ -66,7 +65,7 @@ export class CanvasComponent implements AfterViewInit {
     // this will capture all mousedown events from the canvas element
     fromEvent(canvasEl, 'mousedown')
       .pipe(
-        switchMap((e) => {
+        switchMap(() => {
           // after a mouse down, we'll record all mouse moves
           return fromEvent(canvasEl, 'mousemove')
             .pipe(
