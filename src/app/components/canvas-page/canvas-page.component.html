@@ -1,15 +1,20 @@
-<div class="top-half">
+<div class="row">
   <!--AI-Output-->
-  <div class="column left">
+  <div class="col">
     <caria-ai-output></caria-ai-output>
   </div>
 
   <!--Canvas-->
-  <div class="column">
-    <!-- TODO: insert canvas component instead-->
-    <img src="../../../assets/testcar.png" width="100%" alt="Canvas Component Placeholder"/>
+  <div class="col">
+    <caria-canvas></caria-canvas>
   </div>
 </div>
-<div class="canvas-tools">
-  <p>Insert Canvas Tools</p>
+
+<div class="row">
+  <div class="canvas-tools">
+    <caria-canvas-tools (clearCanvasRequest)="clearCanvasActually($event)"
+                      (changeCanvasColorRequest)="changeCanvasColorActually($event)"
+                      (changeSizeRequest)="changeCanvasSizeActually($event)"
+                      (updateCanvasRequest)="updateCanvasActually($event)"></caria-canvas-tools>
+  </div>
 </div>

@@ -29,4 +29,10 @@ export class CariaService {
       map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)))
     );
   }
+
+  getValuesFromImage(imageArray: number[], width: number, height: number): Observable<any>{
+    //console.log("canvas should be called: " + this.baseUrl + 'canvas');
+    //console.log(JSON.stringify(imageArray));
+    return this.http.get(this.baseUrl + 'canvas', {params: {input_array: JSON.stringify(imageArray), width: width.toString(), height: height.toString()}});
+  }
 }

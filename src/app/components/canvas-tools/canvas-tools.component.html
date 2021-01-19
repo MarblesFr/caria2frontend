@@ -1,0 +1,24 @@
+<div class="color_picker">
+  <span [style.background]="arrayColors[selectedColorIndex]"
+      [cpToggle]="true"
+      [cpDialogDisplay]="'inline'"
+      [cpCancelButton]="true"
+      [(colorPicker)]="arrayColors[selectedColorIndex]"
+      (colorPickerChange)="updateColor()"></span>
+</div>
+<div class="colors">
+  <div *ngFor="let arrayColor of arrayColors; index as i">
+    <div [style.background]="arrayColor" class="color"
+         (click)="changeSelectedColor(i)">Color{{i}}</div>
+  </div>
+</div>
+
+<div class="brush_slider">
+  <p>Brush size</p>
+  <mat-slider class="slider-item" [min]="1" [max]="10" step="1" value="3" (input)="updateSize($event.value)" vertical></mat-slider>
+</div>
+<div class="reset_button">
+  <button (click)="clearCanvas()">Clear Canvas</button>
+</div><div class="update_button">
+  <button (click)="updateCanvasOutput()">Update Canvas</button>
+</div>
