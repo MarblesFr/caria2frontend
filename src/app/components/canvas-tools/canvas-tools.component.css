@@ -1,0 +1,33 @@
+.colors{
+  padding-top: 5%;
+  width: 10%;
+  float: left;
+}
+
+.color{
+  margin: 10% 1% 10% 1%;
+}
+
+.color_picker{
+  width: 20%;
+  float: left;
+}
+
+.brush_slider{
+  float: left;
+  padding-top: 5%;
+  margin-left: 5%;
+  text-align: center;
+}
+
+.reset_button{
+  float: left;
+  margin-left: 5%;
+  padding-top: 5%;
+}
+
+.update_button{
+  float: left;
+  margin-left: 5%;
+  padding-top: 5%;
+}
