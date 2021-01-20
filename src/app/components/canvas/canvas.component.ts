@@ -33,6 +33,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   private cx: CanvasRenderingContext2D;
 
+  public canvasStates: ImageData[] = [];
+
+  public currentCanvasStateStep = 0;
+
   ngOnInit(): void {
     this.values$ = this.store$.select(CariaSelectors.getValues);
   }
@@ -59,6 +63,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     this.cx.strokeStyle = '#000';
     this.canvaselement = canvasEl;
     this.captureEvents(canvasEl);
+    this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -97,6 +102,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
+    fromEvent(canvasEl, 'mouseup').subscribe( val => this.saveCurrentCanvasState());
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
@@ -136,5 +142,17 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     // get image data from canvas
     const canvasImageData = this.cx.getImageData(0, 0, this.width, this.height);
     return this.cariaService.getValuesFromImage(Array.prototype.slice.call(canvasImageData.data), this.width, this.height);
+  }
+
+  public undoLastStep() {
+    if (this.currentCanvasStateStep > 0) {
+      this.cx.putImageData(this.canvasStates[this.currentCanvasStateStep - 1], 0, 0);
+      this.currentCanvasStateStep--;
+    }
+  }
+
+  public saveCurrentCanvasState(){
+    this.currentCanvasStateStep++;
+    this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
   }
 }

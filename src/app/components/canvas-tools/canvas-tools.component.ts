@@ -12,6 +12,7 @@ export class CanvasToolsComponent implements OnInit {
   @Output() changeCanvasColorRequest = new EventEmitter();
   @Output() changeSizeRequest = new EventEmitter();
   @Output() updateCanvasRequest = new EventEmitter();
+  @Output() undoLastCanvasStepRequest = new EventEmitter();
 
   public selectedColorIndex = 0;
 
@@ -43,5 +44,9 @@ export class CanvasToolsComponent implements OnInit {
 
   updateCanvasOutput() {
     this.updateCanvasRequest.emit();
+  }
+
+  undoLastCanvasStep() {
+    this.undoLastCanvasStepRequest.emit();
   }
 }
