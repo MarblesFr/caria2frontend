@@ -30,4 +30,8 @@ export class CanvasPageComponent implements OnInit {
   updateCanvasActually($event: any) {
     this.canvasComponent.updateOutput();
   }
+
+  undoLastCanvasStepActually($event: any) {
+    this.canvasComponent.undoLastStep();
+  }
 }
