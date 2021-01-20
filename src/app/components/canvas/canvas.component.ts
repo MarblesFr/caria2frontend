@@ -135,7 +135,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   public getValues(): Observable<number[]>{
     // get image data from canvas
     const canvasImageData = this.cx.getImageData(0, 0, this.width, this.height);
-    console.log(canvasImageData);
     return this.cariaService.getValuesFromImage(Array.prototype.slice.call(canvasImageData.data), this.width, this.height);
   }
 }
