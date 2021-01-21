@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CanvasPageComponent} from './components/canvas-page/canvas-page.component';
+import {CanvasPageComponent} from './components/canvas/canvas-page/canvas-page.component';
 import {SliderPageComponent} from './components/sliders/slider-page/slider-page.component';
 import {FullscreenPageComponent} from './components/fullscreen-page/fullscreen-page.component';
 
