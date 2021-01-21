@@ -4,8 +4,9 @@ import {
 import {fromEvent, Observable} from 'rxjs';
 import {switchMap, takeUntil, pairwise} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {CariaActions, CariaSelectors} from '../../services/caria-service';
-import {CariaService} from '../../services/caria-service/caria.service';
+import {CariaActions, CariaSelectors} from '../../../services/caria-service';
+import {CariaService} from '../../../services/caria-service/caria.service';
+import {CanvasService} from '../../../services/canvas-service/canvas.service';
 
 @Component({
   selector: 'caria-canvas',
@@ -20,7 +21,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   constructor(
     private readonly store$: Store,
-    private cariaService: CariaService)
+    private cariaService: CariaService,
+    private canvasService: CanvasService)
   {
     this.onResize();
   }
@@ -39,6 +41,12 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.values$ = this.store$.select(CariaSelectors.getValues);
+
+    this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
+    this.canvasService.updateColor.subscribe((color) => this.changeColor(color));
+    this.canvasService.updateSize.subscribe((size) => this.changeBrushSize(size));
+    this.canvasService.updateCanvas.subscribe(() => this.updateOutput());
+    this.canvasService.undoLastStep.subscribe(() => this.undoLastStep());
   }
 
   @HostListener('window:resize', ['$event'])
@@ -102,7 +110,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
-    fromEvent(canvasEl, 'mouseup').subscribe( val => this.saveCurrentCanvasState());
+    fromEvent(canvasEl, 'mouseup').subscribe( () => this.saveCurrentCanvasState());
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
@@ -121,6 +129,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   public clearCanvas(){
     this.cx.clearRect(0, 0, this.width, this.height);
+    this.saveCurrentCanvasState();
   }
 
   public changeColor(colorCodeString: string){
