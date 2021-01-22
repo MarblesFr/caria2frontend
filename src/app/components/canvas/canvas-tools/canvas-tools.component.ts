@@ -4,7 +4,7 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
 @Component({
   selector: 'caria-canvas-tools',
   templateUrl: './canvas-tools.component.html',
-  styleUrls: ['./canvas-tools.component.css']
+  styleUrls: ['./canvas-tools.component.scss']
 })
 export class CanvasToolsComponent implements OnInit {
 

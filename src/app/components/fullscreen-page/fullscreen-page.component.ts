@@ -6,7 +6,7 @@ import {CariaActions} from '../../services/caria-service';
 @Component({
   selector: 'caria-fullscreen-page',
   templateUrl: './fullscreen-page.component.html',
-  styleUrls: ['./fullscreen-page.component.css']
+  styleUrls: ['./fullscreen-page.component.scss']
 })
 export class FullscreenPageComponent implements OnInit {
 
