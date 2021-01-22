@@ -4,7 +4,7 @@ import {
 import {fromEvent, Observable} from 'rxjs';
 import {switchMap, takeUntil, pairwise} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {CariaActions, CariaSelectors} from '../../../services/caria-service';
+import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
 import {CanvasService} from '../../../services/canvas-service/canvas.service';
 
@@ -14,8 +14,6 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
   styles: ['canvas { border: 1px solid #000; }']
 })
 export class CanvasComponent implements OnInit, AfterViewInit {
-
-  values$: Observable<number[]>;
 
   downscaleWidthFactor: number = 2 * 1.1;
 
@@ -40,8 +38,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   public currentCanvasStateStep = 0;
 
   ngOnInit(): void {
-    this.values$ = this.store$.select(CariaSelectors.getValues);
-
     this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
     this.canvasService.updateColor.subscribe((color) => this.changeColor(color));
     this.canvasService.updateSize.subscribe((size) => this.changeBrushSize(size));
