@@ -30,6 +30,7 @@
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
     "ng-packagr": "^11.0.3",
+    "ng2-img-max": "^2.2.4",
     "ngx-color-picker": "^11.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",

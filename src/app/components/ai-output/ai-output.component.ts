@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {CariaService} from '../../services/caria-service/caria.service';
-import {Observable} from 'rxjs';
 import {SafeUrl} from '@angular/platform-browser';
 
 @Component({
@@ -10,11 +9,15 @@ import {SafeUrl} from '@angular/platform-browser';
 })
 export class AiOutputComponent implements OnInit {
 
-  constructor(private cariaService: CariaService) { }
+  constructor(private cariaService: CariaService, private ngZone: NgZone) { }
 
-  dataUrl$: Observable<SafeUrl>;
+  dataUrl: SafeUrl;
 
   ngOnInit(): void {
-    this.dataUrl$ = this.cariaService.getCar();
+    this.cariaService.getCar().subscribe(imageUrl => {
+      this.ngZone.run(() => {
+        this.dataUrl = imageUrl;
+      });
+    });
   }
 }
