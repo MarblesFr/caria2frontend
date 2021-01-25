@@ -13,6 +13,7 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
   template: '<canvas #canvas></canvas>',
   styles: ['canvas { border: 1px solid #000; }']
 })
+
 export class CanvasComponent implements OnInit, AfterViewInit {
 
   downscaleWidthFactor: number = 2 * 1.1;
@@ -20,8 +21,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   constructor(
     private readonly store$: Store,
     private cariaService: CariaService,
-    private canvasService: CanvasService)
-  {
+    private canvasService: CanvasService) {
     this.onResize();
   }
 
@@ -37,6 +37,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   public currentCanvasStateStep = 0;
 
+
   ngOnInit(): void {
     this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
     this.canvasService.updateColor.subscribe((color) => this.changeColor(color));
@@ -47,11 +48,43 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.width = window.innerWidth / this.downscaleWidthFactor;
+    const newWidth = window.innerWidth / this.downscaleWidthFactor;
+    let lineWidthBefore;
+    let lineCapBefore;
+    let strokeStyleBefore;
+    let canvasImg: HTMLImageElement;
+
+    // set
+    if (this.cx != null) {
+      lineWidthBefore = this.cx.lineWidth;
+      lineCapBefore = this.cx.lineCap;
+      strokeStyleBefore = this.cx.strokeStyle;
+    }
+
+    // update
+    this.width = newWidth;
     this.height = this.width / 3;
-    if (this.canvaselement != null) {
-      this.canvaselement.width = this.width;
-      this.canvaselement.height = this.height;
+
+    // apply scaling
+    if (this.canvaselement != null && this.cx != null) {
+      canvasImg = new Image(this.canvaselement.width, this.canvaselement.height);
+      this.canvaselement.toBlob(blob => {
+        const imageFile = new File([blob], 'image.png', { type: 'image/png', lastModified: Date.now() });
+        canvasImg.src = URL.createObjectURL(imageFile);
+
+        this.canvaselement.width = this.width;
+        this.canvaselement.height = this.height;
+
+        // apply styles
+        if (this.currentCanvasStateStep > 0 && this.cx != null) {
+          this.cx.fillStyle = '#FFF';
+          this.cx.fillRect(0, 0, this.width, this.height);
+          canvasImg.onload = (() => this.cx.drawImage(canvasImg, 0, 0, this.width, this.height));
+        }
+        this.cx.lineWidth = lineWidthBefore;
+        this.cx.lineCap = lineCapBefore;
+        this.cx.strokeStyle = strokeStyleBefore;
+      }, 'image/png');
     }
   }
 
@@ -65,6 +98,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
     this.cx.strokeStyle = '#000';
+    this.cx.fillStyle = '#FFF';
+    this.cx.fillRect(0, 0, this.width, this.height);
     this.canvaselement = canvasEl;
     this.captureEvents(canvasEl);
     this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
@@ -106,11 +141,13 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
-    fromEvent(canvasEl, 'mouseup').subscribe( () => this.saveCurrentCanvasState());
+    fromEvent(canvasEl, 'mouseup').subscribe(() => this.saveCurrentCanvasState());
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
-    if (!this.cx) { return; }
+    if (!this.cx) {
+      return;
+    }
 
     this.cx.beginPath();
 
@@ -123,27 +160,27 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     // update ai outout through backend upon updating the canvas
   }
 
-  public clearCanvas(){
-    this.cx.clearRect(0, 0, this.width, this.height);
+  public clearCanvas() {
+    this.cx.fillRect(0, 0, this.width, this.height);
     this.saveCurrentCanvasState();
   }
 
-  public changeColor(colorCodeString: string){
+  public changeColor(colorCodeString: string) {
     this.cx.strokeStyle = colorCodeString;
   }
 
-  public changeBrushSize(brushSize: number){
+  public changeBrushSize(brushSize: number) {
     this.cx.lineWidth = brushSize;
   }
 
-  public updateOutput(){
+  public updateOutput() {
     // get values using the image from canvas and the encoder in the backend
     this.getValues().subscribe(
-      values =>  this.store$.dispatch(CariaActions.updateValues({ values }))
+      values => this.store$.dispatch(CariaActions.updateValues({values}))
     );
   }
 
-  public getValues(): Observable<number[]>{
+  public getValues(): Observable<number[]> {
     // get image data from canvas
     const canvasImageData = this.cx.getImageData(0, 0, this.width, this.height);
     return this.cariaService.getValuesFromImage(Array.prototype.slice.call(canvasImageData.data), this.width, this.height);
@@ -156,7 +193,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public saveCurrentCanvasState(){
+  public saveCurrentCanvasState() {
     this.currentCanvasStateStep++;
     this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
   }
