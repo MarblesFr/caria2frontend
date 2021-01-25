@@ -21,6 +21,7 @@ import {SliderWindowComponent} from './components/sliders/slider-window/slider-w
 import {MatButtonModule} from '@angular/material/button';
 import {VarDirective} from './util/ng-var.directive';
 import {MatIconModule} from '@angular/material/icon';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     MatIconModule,
     RootStoreModule.forRoot(),
+    Ng2ImgMaxModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

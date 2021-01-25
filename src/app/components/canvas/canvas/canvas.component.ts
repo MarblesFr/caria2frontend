@@ -1,8 +1,6 @@
-import {
-  Component, Input, ElementRef, AfterViewInit, ViewChild, HostListener, OnInit
-} from '@angular/core';
-import {fromEvent, Observable} from 'rxjs';
-import {switchMap, takeUntil, pairwise} from 'rxjs/operators';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {fromEvent} from 'rxjs';
+import {pairwise, switchMap, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
@@ -175,15 +173,11 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   public updateOutput() {
     // get values using the image from canvas and the encoder in the backend
-    this.getValues().subscribe(
-      values => this.store$.dispatch(CariaActions.updateValues({values}))
-    );
-  }
-
-  public getValues(): Observable<number[]> {
-    // get image data from canvas
-    const canvasImageData = this.cx.getImageData(0, 0, this.width, this.height);
-    return this.cariaService.getValuesFromImage(Array.prototype.slice.call(canvasImageData.data), this.width, this.height);
+    this.canvaselement.toBlob(blob => {
+      this.cariaService.getValuesFromImage(blob).subscribe(
+        values =>  this.store$.dispatch(CariaActions.updateValues({ values }))
+      );
+    });
   }
 
   public undoLastStep() {
