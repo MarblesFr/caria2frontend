@@ -14,6 +14,8 @@ export class CanvasToolsComponent implements OnInit {
 
   public color: any;
 
+  public brushSize: number;
+
   constructor(private canvasService: CanvasService) { }
 
   ngOnInit(): void {
@@ -33,7 +35,8 @@ export class CanvasToolsComponent implements OnInit {
   }
 
   updateSize(size: number) {
-    this.canvasService.notifyUpdateSize(size);
+    this.brushSize = size;
+    this.canvasService.notifyUpdateSize(this.brushSize);
   }
 
   updateCanvasOutput() {
@@ -42,5 +45,9 @@ export class CanvasToolsComponent implements OnInit {
 
   undoLastCanvasStep() {
     this.canvasService.notifyUndoLastStep();
+  }
+
+  updateColorTo(colorString: string){
+    this.canvasService.notifyUpdateColor(colorString);
   }
 }

@@ -15,8 +15,8 @@
   </div>
 
   <div class="col brush_slider">
-    <p>Brush size</p>
-    <mat-slider class="slider-item" [min]="1" [max]="10" step="1" value="3" (input)="updateSize($event.value)"
+    <p>Brush size: {{brushSize}}</p>
+    <mat-slider class="slider-item" [min]="1" [max]="50" step="1" value="3" (input)="updateSize($event.value)"
                 vertical>
     </mat-slider>
   </div>
@@ -28,5 +28,8 @@
   </div>
   <div class="col undo_button">
     <button (click)="undoLastCanvasStep()">Undo</button>
+  </div>
+  <div class="col radiergummi">
+    <button (click)="updateColorTo('#ffffff')">Radiergummi</button>
   </div>
 </div>
