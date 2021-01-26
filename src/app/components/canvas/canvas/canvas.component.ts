@@ -139,7 +139,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
-    fromEvent(canvasEl, 'mouseup').subscribe(() => this.saveCurrentCanvasState());
+    fromEvent(canvasEl, 'mouseup').subscribe(() => {
+      this.saveCurrentCanvasState();
+      this.updateOutput();
+    });
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
@@ -154,7 +157,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       this.cx.lineTo(currentPos.x, currentPos.y);
       this.cx.stroke();
     }
-
     // update ai outout through backend upon updating the canvas
   }
 
