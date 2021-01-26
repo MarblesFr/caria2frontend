@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CanvasService} from '../../../services/canvas-service/canvas.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'caria-canvas-tools',
@@ -14,11 +15,12 @@ export class CanvasToolsComponent implements OnInit {
 
   public color: any;
 
-  public brushSize: number;
+  brushSize$: Observable<number>;
 
   constructor(private canvasService: CanvasService) { }
 
   ngOnInit(): void {
+    this.brushSize$ = this.canvasService.updateSize;
   }
 
   clearCanvas() {
@@ -35,8 +37,7 @@ export class CanvasToolsComponent implements OnInit {
   }
 
   updateSize(size: number) {
-    this.brushSize = size;
-    this.canvasService.notifyUpdateSize(this.brushSize);
+    this.canvasService.notifyUpdateSize(size);
   }
 
   updateCanvasOutput() {

@@ -1,4 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
+import {convertToActualSize} from '../../util/caria.util';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class CanvasService {
   }
 
   notifyUpdateSize(size: number) {
-    this.updateSize.emit(size);
+    this.updateSize.emit(convertToActualSize(size));
   }
 
   notifyUpdateCanvas() {
