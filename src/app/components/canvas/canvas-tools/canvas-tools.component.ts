@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CanvasService} from '../../../services/canvas-service/canvas.service';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'caria-canvas-tools',
@@ -20,7 +21,7 @@ export class CanvasToolsComponent implements OnInit {
   constructor(private canvasService: CanvasService) { }
 
   ngOnInit(): void {
-    this.brushSize$ = this.canvasService.updateSize;
+    this.brushSize$ = this.canvasService.updateSize.pipe(map(value => Math.round(value)));
   }
 
   clearCanvas() {
@@ -38,10 +39,6 @@ export class CanvasToolsComponent implements OnInit {
 
   updateSize(size: number) {
     this.canvasService.notifyUpdateSize(size);
-  }
-
-  updateCanvasOutput() {
-    this.canvasService.notifyUpdateCanvas();
   }
 
   undoLastCanvasStep() {
