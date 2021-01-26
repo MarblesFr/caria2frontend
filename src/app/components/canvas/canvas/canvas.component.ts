@@ -52,18 +52,15 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     let strokeStyleBefore;
     let canvasImg: HTMLImageElement;
 
-    // set
     if (this.cx != null) {
       lineWidthBefore = this.cx.lineWidth;
       lineCapBefore = this.cx.lineCap;
       strokeStyleBefore = this.cx.strokeStyle;
     }
 
-    // update
     this.width = newWidth;
     this.height = this.width / 3;
 
-    // apply scaling
     if (this.canvaselement != null && this.cx != null) {
       canvasImg = new Image(this.canvaselement.width, this.canvaselement.height);
       this.canvaselement.toBlob(blob => {
@@ -73,7 +70,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         this.canvaselement.width = this.width;
         this.canvaselement.height = this.height;
 
-        // apply styles
         if (this.currentCanvasStateStep > 0 && this.cx != null) {
           this.cx.fillStyle = '#FFF';
           this.cx.fillRect(0, 0, this.width, this.height);
@@ -104,20 +100,13 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
-    // this will capture all mousedown events from the canvas element
     fromEvent(canvasEl, 'mousedown')
       .pipe(
         switchMap(() => {
-          // after a mouse down, we'll record all mouse moves
           return fromEvent(canvasEl, 'mousemove')
             .pipe(
-              // we'll stop (and unsubscribe) once the user releases the mouse
-              // this will trigger a 'mouseup' event
               takeUntil(fromEvent(canvasEl, 'mouseup')),
-              // we'll also stop (and unsubscribe) once the mouse leaves the canvas (mouseleave event)
               takeUntil(fromEvent(canvasEl, 'mouseleave')),
-              // pairwise lets us get the previous value to draw a line from
-              // the previous point to the current point
               pairwise(),
             );
         })
@@ -125,7 +114,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       .subscribe((res: [MouseEvent, MouseEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
 
-        // previous and current position with the offset
         const prevPos = {
           x: res[0].clientX - rect.left,
           y: res[0].clientY - rect.top
@@ -136,13 +124,32 @@ export class CanvasComponent implements OnInit, AfterViewInit {
           y: res[1].clientY - rect.top
         };
 
-        // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
       });
-    fromEvent(canvasEl, 'mouseup').subscribe(() => {
+    fromEvent(canvasEl, 'mouseup').subscribe((res: MouseEvent) => {
       this.saveCurrentCanvasState();
+      const rect = canvasEl.getBoundingClientRect();
+      const position = {
+        x: res.clientX - rect.left,
+        y: res.clientY - rect.top
+      };
+      this.drawPointOnCanvas(position);
       this.updateOutput();
     });
+  }
+
+  private drawPointOnCanvas(position: { x: number, y: number }){
+    if (!this.cx){
+      return;
+    }
+
+    this.cx.beginPath();
+
+    if (position){
+      this.cx.moveTo(position.x, position.y);
+      this.cx.lineTo(position.x, position.y);
+      this.cx.stroke();
+    }
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
@@ -153,11 +160,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     this.cx.beginPath();
 
     if (prevPos) {
-      this.cx.moveTo(prevPos.x, prevPos.y); // from
+      this.cx.moveTo(prevPos.x, prevPos.y);
       this.cx.lineTo(currentPos.x, currentPos.y);
       this.cx.stroke();
     }
-    // update ai outout through backend upon updating the canvas
   }
 
   public clearCanvas() {
@@ -174,7 +180,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   }
 
   public updateOutput() {
-    // get values using the image from canvas and the encoder in the backend
     this.canvaselement.toBlob(blob => {
       this.cariaService.getValuesFromImage(blob).subscribe(
         values =>  this.store$.dispatch(CariaActions.updateValues({ values }))
