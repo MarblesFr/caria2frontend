@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
-import {fromEvent} from 'rxjs';
+import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {fromEvent, Subscription} from 'rxjs';
 import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
@@ -12,10 +12,9 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
   styles: ['canvas { border: 1px solid #000; }']
 })
 
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   downscaleWidthFactor: number = 2 * 1.1;
-
   constructor(
     private readonly store$: Store,
     private cariaService: CariaService,
@@ -24,12 +23,18 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   @ViewChild('canvas') public canvas: ElementRef;
+
   public canvaselement;
+  public width = window.innerWidth / this.downscaleWidthFactor;
 
-  @Input() public width = window.innerWidth / this.downscaleWidthFactor;
-  @Input() public height = window.innerWidth / 3;
-
+  public height = this.width / 3;
   private cx: CanvasRenderingContext2D;
+
+  firstStepSubscription: Subscription;
+  clearCanvasSubscription: Subscription;
+  activeColorSubscription: Subscription;
+  brushSizeSubscription: Subscription;
+  activeImageSubscription: Subscription;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -82,7 +87,7 @@ export class CanvasComponent implements AfterViewInit {
     this.canvaselement = canvasEl;
     this.captureEvents(canvasEl);
 
-    this.canvasService.currentStep$.pipe(
+    this.firstStepSubscription = this.canvasService.currentStep$.pipe(
       take(1)
     ).subscribe(
       index => {
@@ -92,10 +97,10 @@ export class CanvasComponent implements AfterViewInit {
       }
     );
 
-    this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
-    this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
-    this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
-    this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
+    this.clearCanvasSubscription = this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
+    this.activeColorSubscription = this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
+    this.brushSizeSubscription = this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
+    this.activeImageSubscription = this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -187,11 +192,18 @@ export class CanvasComponent implements AfterViewInit {
 
   public saveCurrentCanvasState() {
     this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
-    this.updateOutput();
   }
 
   public updateImage(imageData: ImageData) {
     this.cx.putImageData(imageData, 0, 0);
     this.updateOutput();
+  }
+
+  ngOnDestroy(): void {
+    this.firstStepSubscription.unsubscribe();
+    this.clearCanvasSubscription.unsubscribe();
+    this.activeColorSubscription.unsubscribe();
+    this.brushSizeSubscription.unsubscribe();
+    this.activeImageSubscription.unsubscribe();
   }
 }
