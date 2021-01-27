@@ -1,9 +1,14 @@
 .colors{
   float: left;
+  width: 50%;
+  padding-right: 0;
 }
 
 .color{
-  margin: 10% 1% 10% 1%;
+  float: left;
+  margin: 4% 5% 4% 5%;
+  padding: 15%;
+  width: 20%;
 }
 
 .color_picker{
@@ -14,6 +19,13 @@
 .brush_slider{
   float: left;
   text-align: center;
+  margin: 3.5% 0 0 0;
+  padding-left: 0;
+}
+
+.allColors{
+  width: 50%;
+  height: 10%;
 }
 
 .reset_button{
@@ -26,4 +38,32 @@
 
 .radiergummi{
   float: left;
+}
+
+button{
+  width: 50%;
+  height: 15%;
+  margin: 45% 10% 0 10%;
+  text-align: center;
+  transition: all 0.2s;
+  background: gray;
+  color: white;
+  display: inline-block;
+  border-radius: 2em;
+  box-sizing: border-box;
+  padding: 1% 0 1% 0;
+  outline: none;
+}
+
+button:hover{
+  background-color: darkgray;
+}
+
+.colorDesc{
+  float: left;
+  margin: 15% 10% 0 0;
+}
+
+.color_picker{
+  height: 100%;
 }
