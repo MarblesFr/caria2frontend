@@ -1,5 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {convertToActualSize} from '../../util/caria.util';
+import {BehaviorSubject, combineLatest} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {filterUndefined} from '../../util/FilterUndefined';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +10,21 @@ import {convertToActualSize} from '../../util/caria.util';
 export class CanvasService {
 
   clearCanvas = new EventEmitter();
-  updateColor = new EventEmitter<string>();
-  updateSize = new EventEmitter<number>();
-  updateCanvas = new EventEmitter();
-  undoLastStep = new EventEmitter();
+
+  allImages$ = new BehaviorSubject<ImageData[]>([]);
+  currentStep$ = new BehaviorSubject<number>(-1);
+  activeImage$ = combineLatest([this.allImages$, this.currentStep$]).pipe(
+    map(value => value[0][value[1]]),
+    filterUndefined()
+  );
+
+  size$ = new BehaviorSubject<number>(3);
+
+  colors$ = new BehaviorSubject<string[]>(['#000', '#000', '#000', '#000', '#000']);
+  activeColorIndex$ = new BehaviorSubject<number>(0);
+  activeColor$ = combineLatest([this.colors$, this.activeColorIndex$]).pipe(
+    map(value => value[0][value[1]])
+  );
 
   constructor() {
   }
@@ -19,19 +33,41 @@ export class CanvasService {
     this.clearCanvas.emit();
   }
 
-  notifyUpdateColor(color: string) {
-    this.updateColor.emit(color);
+  updateImage(image: ImageData) {
+    let images = this.allImages$.value;
+    const currentStep = this.currentStep$.value;
+    images = images.slice(0, currentStep + 1);
+    images.push(image);
+    this.currentStep$.next(currentStep + 1);
+    this.allImages$.next(images);
   }
 
-  notifyUpdateSize(size: number) {
-    this.updateSize.emit(convertToActualSize(size));
+  undoImage() {
+    const currentStep = this.currentStep$.value;
+    if (currentStep > 0) {
+      this.currentStep$.next(currentStep - 1);
+    }
   }
 
-  notifyUpdateCanvas() {
-    this.updateCanvas.emit();
+  redoImage() {
+    const images = this.allImages$.value;
+    const currentStep = this.currentStep$.value;
+    if (images.length - 1 > currentStep) {
+      this.currentStep$.next(currentStep + 1);
+    }
   }
 
-  notifyUndoLastStep() {
-    this.undoLastStep.emit();
+  updateColor(color: string) {
+    const colors = this.colors$.value;
+    colors[this.activeColorIndex$.value] = color;
+    this.colors$.next(colors);
+  }
+
+  updateActiveColorIndex(index: number) {
+    this.activeColorIndex$.next(index);
+  }
+
+  updateSize(size: number) {
+    this.size$.next(convertToActualSize(size));
   }
 }

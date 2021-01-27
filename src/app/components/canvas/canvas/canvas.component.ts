@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 import {fromEvent} from 'rxjs';
-import {pairwise, switchMap, takeUntil} from 'rxjs/operators';
+import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
@@ -12,7 +12,7 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
   styles: ['canvas { border: 1px solid #000; }']
 })
 
-export class CanvasComponent implements OnInit, AfterViewInit {
+export class CanvasComponent implements AfterViewInit {
 
   downscaleWidthFactor: number = 2 * 1.1;
 
@@ -30,19 +30,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   @Input() public height = window.innerWidth / 3;
 
   private cx: CanvasRenderingContext2D;
-
-  public canvasStates: ImageData[] = [];
-
-  public currentCanvasStateStep = 0;
-
-
-  ngOnInit(): void {
-    this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
-    this.canvasService.updateColor.subscribe((color) => this.changeColor(color));
-    this.canvasService.updateSize.subscribe((size) => this.changeBrushSize(size));
-    this.canvasService.updateCanvas.subscribe(() => this.updateOutput());
-    this.canvasService.undoLastStep.subscribe(() => this.undoLastStep());
-  }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -64,17 +51,15 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     if (this.canvaselement != null && this.cx != null) {
       canvasImg = new Image(this.canvaselement.width, this.canvaselement.height);
       this.canvaselement.toBlob(blob => {
-        const imageFile = new File([blob], 'image.png', { type: 'image/png', lastModified: Date.now() });
+        const imageFile = new File([blob], 'image.png', {type: 'image/png', lastModified: Date.now()});
         canvasImg.src = URL.createObjectURL(imageFile);
 
         this.canvaselement.width = this.width;
         this.canvaselement.height = this.height;
 
-        if (this.currentCanvasStateStep > 0 && this.cx != null) {
-          this.cx.fillStyle = '#FFF';
-          this.cx.fillRect(0, 0, this.width, this.height);
-          canvasImg.onload = (() => this.cx.drawImage(canvasImg, 0, 0, this.width, this.height));
-        }
+        this.cx.fillStyle = '#FFF';
+        this.cx.fillRect(0, 0, this.width, this.height);
+        canvasImg.onload = (() => this.cx.drawImage(canvasImg, 0, 0, this.width, this.height));
         this.cx.lineWidth = lineWidthBefore;
         this.cx.lineCap = lineCapBefore;
         this.cx.strokeStyle = strokeStyleBefore;
@@ -96,7 +81,21 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     this.cx.fillRect(0, 0, this.width, this.height);
     this.canvaselement = canvasEl;
     this.captureEvents(canvasEl);
-    this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
+
+    this.canvasService.currentStep$.pipe(
+      take(1)
+    ).subscribe(
+      index => {
+        if (index < 0){
+          this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
+        }
+      }
+    );
+
+    this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
+    this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
+    this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
+    this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -127,14 +126,13 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         this.drawOnCanvas(prevPos, currentPos);
       });
     fromEvent(canvasEl, 'mouseup').subscribe((res: MouseEvent) => {
-      this.saveCurrentCanvasState();
       const rect = canvasEl.getBoundingClientRect();
       const position = {
         x: res.clientX - rect.left,
         y: res.clientY - rect.top
       };
       this.drawPointOnCanvas(position);
-      this.updateOutput();
+      this.saveCurrentCanvasState();
     });
   }
 
@@ -182,20 +180,18 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   public updateOutput() {
     this.canvaselement.toBlob(blob => {
       this.cariaService.getValuesFromImage(blob).subscribe(
-        values =>  this.store$.dispatch(CariaActions.updateValues({ values }))
+        values => this.store$.dispatch(CariaActions.updateValues({values}))
       );
     });
   }
 
-  public undoLastStep() {
-    if (this.currentCanvasStateStep > 0) {
-      this.cx.putImageData(this.canvasStates[this.currentCanvasStateStep - 1], 0, 0);
-      this.currentCanvasStateStep--;
-    }
+  public saveCurrentCanvasState() {
+    this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
+    this.updateOutput();
   }
 
-  public saveCurrentCanvasState() {
-    this.currentCanvasStateStep++;
-    this.canvasStates[this.currentCanvasStateStep] = this.cx.getImageData(0, 0, this.width, this.height);
+  public updateImage(imageData: ImageData) {
+    this.cx.putImageData(imageData, 0, 0);
+    this.updateOutput();
   }
 }
