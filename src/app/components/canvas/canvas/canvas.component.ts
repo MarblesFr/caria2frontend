@@ -5,6 +5,8 @@ import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
 import {CanvasService} from '../../../services/canvas-service/canvas.service';
+import {Tools} from '../canvas-tools/canvas-tools.component';
+import {rgbToHex} from '../../../util/caria.util';
 
 @Component({
   selector: 'caria-canvas',
@@ -15,6 +17,9 @@ import {CanvasService} from '../../../services/canvas-service/canvas.service';
 export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   downscaleWidthFactor: number = 2 * 1.1;
+
+  private activeColor: string;
+
   constructor(
     private readonly store$: Store,
     private cariaService: CariaService,
@@ -35,6 +40,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   activeColorSubscription: Subscription;
   brushSizeSubscription: Subscription;
   activeImageSubscription: Subscription;
+  currentToolSubscription: Subscription;
+
+  public currentTool = Tools.PENCIL;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -91,7 +99,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
       take(1)
     ).subscribe(
       index => {
-        if (index < 0){
+        if (index < 0) {
           this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
         }
       }
@@ -101,6 +109,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.activeColorSubscription = this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
     this.brushSizeSubscription = this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
     this.activeImageSubscription = this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
+    this.currentToolSubscription = this.canvasService.updateTool.subscribe((tool) => this.updateTool(tool));
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -127,8 +136,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           x: res[1].clientX - rect.left,
           y: res[1].clientY - rect.top
         };
-
-        this.drawOnCanvas(prevPos, currentPos);
+        if (this.currentTool === Tools.ERASER)
+        {
+          this.cx.strokeStyle = '#FFF';
+          this.drawOnCanvas(prevPos, currentPos);
+        }
+        else if (this.currentTool === Tools.PENCIL){
+          this.cx.strokeStyle = this.activeColor;
+          this.drawOnCanvas(prevPos, currentPos);
+        }
       });
     fromEvent(canvasEl, 'mouseup').subscribe((res: MouseEvent) => {
       const rect = canvasEl.getBoundingClientRect();
@@ -136,8 +152,28 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         x: res.clientX - rect.left,
         y: res.clientY - rect.top
       };
-      this.drawPointOnCanvas(position);
+      if (this.currentTool === Tools.ERASER)
+      {
+        this.cx.strokeStyle = '#FFF';
+        this.drawPointOnCanvas(position);
+      }
+      else if (this.currentTool === Tools.PENCIL){
+        this.cx.strokeStyle = this.activeColor;
+        this.drawPointOnCanvas(position);
+      }
       this.saveCurrentCanvasState();
+    });
+    fromEvent(canvasEl, 'mousedown').subscribe((res: MouseEvent) => {
+      if (this.currentTool === Tools.PICKER) {
+        const rect = canvasEl.getBoundingClientRect();
+        const position = {
+          x: res.clientX - rect.left,
+          y: res.clientY - rect.top
+        };
+        const pixel = this.cx.getImageData(position.x, position.y, 1, 1);
+        const data = pixel.data;
+        this.canvasService.updateColor(rgbToHex(data[0], data[1], data[2]));
+      }
     });
   }
 
@@ -175,7 +211,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   public changeColor(colorCodeString: string) {
-    this.cx.strokeStyle = colorCodeString;
+    this.activeColor = colorCodeString;
+    this.cx.strokeStyle = this.activeColor;
   }
 
   public changeBrushSize(brushSize: number) {
@@ -199,11 +236,16 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.updateOutput();
   }
 
+  private updateTool(tool: Tools) {
+    this.currentTool = tool;
+  }
+
   ngOnDestroy(): void {
     this.firstStepSubscription.unsubscribe();
     this.clearCanvasSubscription.unsubscribe();
     this.activeColorSubscription.unsubscribe();
     this.brushSizeSubscription.unsubscribe();
     this.activeImageSubscription.unsubscribe();
+    this.currentToolSubscription.unsubscribe();
   }
 }

@@ -11,3 +11,12 @@ export function convertToActualSize(size: number) {
 export function convertFromActualSize(size: number) {
   return Math.pow(size / 30, 1 / 3) - 0.3;
 }
+
+export function rgbToHex(r, g, b){
+  return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+}
+
+function componentToHex(color){
+  const hex = color.toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+}

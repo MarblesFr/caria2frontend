@@ -3,6 +3,7 @@ import {convertToActualSize} from '../../util/caria.util';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {filterUndefined} from '../../util/FilterUndefined';
+import {Tools} from '../../components/canvas/canvas-tools/canvas-tools.component';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ import {filterUndefined} from '../../util/FilterUndefined';
 export class CanvasService {
 
   clearCanvas = new EventEmitter();
+
+  updateTool = new EventEmitter<Tools>();
 
   allImages$ = new BehaviorSubject<ImageData[]>([]);
   currentStep$ = new BehaviorSubject<number>(-1);
@@ -69,5 +72,9 @@ export class CanvasService {
 
   updateSize(size: number) {
     this.size$.next(convertToActualSize(size));
+  }
+
+  notifyUpdateTool(tool: Tools) {
+    this.updateTool.emit(tool);
   }
 }
