@@ -5,10 +5,9 @@ export function randomValues(): number[] {
 }
 
 export function convertToActualSize(size: number) {
-  size += 0.3;
-  return 30 * Math.pow(size, 3);
+  return 30 * Math.pow(size + 0.3, 3);
 }
 
 export function convertFromActualSize(size: number) {
-  return Math.pow(size, 1 / 3) / 30 - 0.3;
+  return Math.pow(size / 30, 1 / 3) - 0.3;
 }
