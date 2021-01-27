@@ -13,7 +13,7 @@ export function convertFromActualSize(size: number) {
 }
 
 export function rgbToHex(r, g, b){
-  return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 function componentToHex(color){
