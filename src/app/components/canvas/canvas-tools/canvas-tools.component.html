@@ -28,7 +28,13 @@
   <div class="col redo_button">
     <button (click)="redoLastCanvasStep()">Redo</button>
   </div>
-  <div class="col radiergummi">
-    <button (click)="updateColorTo('#ffffff')">Radiergummi</button>
+  <div class="col pencil">
+    <button (click)="updateCurrentTool(Tools.PENCIL)">Pencil</button>
+  </div>
+  <div class="col eraser">
+    <button (click)="updateCurrentTool(Tools.ERASER)">Eraser</button>
+  </div>
+  <div class="col picker">
+    <button (click)="updateCurrentTool(Tools.PICKER)">Picker</button>
   </div>
 </div>

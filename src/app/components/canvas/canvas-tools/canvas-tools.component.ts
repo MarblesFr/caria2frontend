@@ -4,12 +4,21 @@ import {Observable, Subscription} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {convertFromActualSize} from '../../../util/caria.util';
 
+export enum Tools{
+  PENCIL,
+  ERASER,
+  PICKER,
+  FILL
+}
+
 @Component({
   selector: 'caria-canvas-tools',
   templateUrl: './canvas-tools.component.html',
   styleUrls: ['./canvas-tools.component.scss']
 })
 export class CanvasToolsComponent implements OnInit, OnDestroy {
+
+  Tools = Tools;
 
   selectedColorIndex$: Observable<number>;
 
@@ -60,12 +69,12 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
     this.canvasService.redoImage();
   }
 
-  updateColorTo(colorString: string){
-    this.canvasService.updateColor(colorString);
-  }
-
   convertFromActualSize(size: number){
     return convertFromActualSize(size);
+  }
+
+  updateCurrentTool(tool: Tools){
+    this.canvasService.notifyUpdateTool(tool);
   }
 
   ngOnDestroy(): void {
