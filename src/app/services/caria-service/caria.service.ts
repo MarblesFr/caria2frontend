@@ -27,8 +27,9 @@ export class CariaService {
     return this.store$.pipe(
       select(CariaSelectors.getValues),
       filterUndefined(),
-      switchMap(values =>
-        this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'})),
+      switchMap(values => {
+        return this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+      }),
       map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)))
     );
   }
