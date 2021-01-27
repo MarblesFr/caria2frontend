@@ -2,12 +2,13 @@
   float: left;
   width: 50%;
   padding-right: 0;
+  padding-left: 3%;
 }
 
 .color{
   float: left;
   margin: 4% 5% 4% 5%;
-  padding: 15%;
+  padding: 12%;
   width: 20%;
 }
 
@@ -19,13 +20,21 @@
 .brush_slider{
   float: left;
   text-align: center;
-  margin: 3.5% 0 0 0;
+  margin: auto;
   padding-left: 0;
+}
+
+mat-slider{
+  min-height: 15rem;
 }
 
 .allColors{
   width: 50%;
   height: 10%;
+}
+
+.slider-height{
+  height: 100%;
 }
 
 .reset_button{
@@ -51,7 +60,7 @@
 button{
   width: 50%;
   height: 15%;
-  margin: 45% 10% 0 10%;
+  margin: 80% 10% 0 10%;
   text-align: center;
   transition: all 0.2s;
   background: gray;
@@ -69,7 +78,7 @@ button:hover{
 
 .colorDesc{
   float: left;
-  margin: 15% 10% 0 0;
+  margin: 12% 1% 0 0;
 }
 
 .color_picker{

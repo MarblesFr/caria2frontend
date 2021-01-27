@@ -1,7 +1,7 @@
 .column{
   float:left;
   width: 50%;
-  padding: 3% 1% 1% 1%;
+  padding: 3% 0 1% 1%;
 }
 
 .canvas-tools{
@@ -9,6 +9,10 @@
   width: 96%;
   background-color: #C0C0C0;
   height: 45%;
+}
+
+.canvas-tool-row{
+  margin-right: 0;
 }
 
 .top-row{

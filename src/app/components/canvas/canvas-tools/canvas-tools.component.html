@@ -7,7 +7,7 @@
           (colorPickerChange)="updateColor($event)"></span>
   </div>
   <div class="col colors" *ngIf="(arrayColors$ | async) as colors">
-    <div *ngFor="let arrayColor of colors; index as i">
+    <div class="row" *ngFor="let arrayColor of colors; index as i">
       <p class="colorDesc">Color {{i+1}}:</p>
       <div [style.background]="arrayColor" class="color"
            (click)="changeActiveColorIndex(i)"></div>
@@ -15,12 +15,12 @@
   </div>
   <div class="col brush_slider">
     <p class="brush_size">Brush size: {{(brushSize$ | async)}}</p>
-    <mat-slider class="slider-item" [min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (input)="updateSize($event.value)"
+    <mat-slider class="slider-item slider-height" [min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (input)="updateSize($event.value)"
                 vertical>
     </mat-slider>
   </div>
   <div class="col reset_button">
-    <button (click)="clearCanvas()">Clear Canvas</button>
+    <button (click)="clearCanvas()">Clear</button>
   </div>
   <div class="col undo_button">
     <button (click)="undoLastCanvasStep()">Undo</button>
