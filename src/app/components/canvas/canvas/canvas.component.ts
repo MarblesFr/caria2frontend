@@ -43,6 +43,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   currentToolSubscription: Subscription;
 
   public currentTool = Tools.PENCIL;
+  public currentImage: ImageData;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -50,7 +51,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     let lineWidthBefore;
     let lineCapBefore;
     let strokeStyleBefore;
-    let canvasImg: HTMLImageElement;
 
     if (this.cx != null) {
       lineWidthBefore = this.cx.lineWidth;
@@ -62,21 +62,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.height = this.width / 3;
 
     if (this.canvaselement != null && this.cx != null) {
-      canvasImg = new Image(this.canvaselement.width, this.canvaselement.height);
-      this.canvaselement.toBlob(blob => {
-        const imageFile = new File([blob], 'image.png', {type: 'image/png', lastModified: Date.now()});
-        canvasImg.src = URL.createObjectURL(imageFile);
+      this.canvaselement.width = this.width;
+      this.canvaselement.height = this.height;
 
-        this.canvaselement.width = this.width;
-        this.canvaselement.height = this.height;
-
-        this.cx.fillStyle = '#FFF';
-        this.cx.fillRect(0, 0, this.width, this.height);
-        canvasImg.onload = (() => this.cx.drawImage(canvasImg, 0, 0, this.width, this.height));
-        this.cx.lineWidth = lineWidthBefore;
-        this.cx.lineCap = lineCapBefore;
-        this.cx.strokeStyle = strokeStyleBefore;
-      }, 'image/png');
+      this.cx.fillStyle = '#FFF';
+      this.cx.fillRect(0, 0, this.width, this.height);
+      this.setImageToCanvas();
+      this.cx.lineWidth = lineWidthBefore;
+      this.cx.lineCap = lineCapBefore;
+      this.cx.strokeStyle = strokeStyleBefore;
     }
   }
 
@@ -232,8 +226,15 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   public updateImage(imageData: ImageData) {
-    this.cx.putImageData(imageData, 0, 0);
+    this.currentImage = imageData;
+    this.setImageToCanvas();
     this.updateOutput();
+  }
+
+  private setImageToCanvas() {
+    createImageBitmap(this.currentImage).then(renderer =>
+      this.cx.drawImage(renderer, 0, 0, this.width, this.height)
+    );
   }
 
   private updateTool(tool: Tools) {
