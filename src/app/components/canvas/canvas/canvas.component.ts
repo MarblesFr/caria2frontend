@@ -58,8 +58,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
       strokeStyleBefore = this.cx.strokeStyle;
     }
 
-    this.width = newWidth;
-    this.height = this.width / 3;
+    this.width = Math.round(newWidth);
+    this.height = Math.round(this.width / 3);
 
     if (this.canvaselement != null && this.cx != null) {
       this.canvaselement.width = this.width;
@@ -81,7 +81,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     canvasEl.width = this.width;
     canvasEl.height = this.height;
 
-    this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
     this.cx.strokeStyle = '#000';
     this.cx.fillStyle = '#FFF';
