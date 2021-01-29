@@ -87,7 +87,7 @@ export class CanvasService {
     this.size$.next(convertToActualSize(size));
   }
 
-  notifyUpdateTool(tool: Tools) {
+  updateActiveTool(tool: Tools) {
     this.activeTool$.next(tool);
   }
 }

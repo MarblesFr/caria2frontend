@@ -138,7 +138,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           this.drawOnCanvas(prevPos, currentPos);
         }
       });
-    fromEvent(canvasEl, 'mouseup').subscribe((res: MouseEvent) => {
+    fromEvent(canvasEl, 'mouseup').subscribe(() => {
+      this.saveCurrentCanvasState();
+    });
+    fromEvent(canvasEl, 'mousedown').subscribe((res: MouseEvent) => {
       const rect = canvasEl.getBoundingClientRect();
       const position = {
         x: res.clientX - rect.left,
@@ -153,18 +156,11 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         this.cx.strokeStyle = this.activeColor;
         this.drawPointOnCanvas(position);
       }
-      this.saveCurrentCanvasState();
-    });
-    fromEvent(canvasEl, 'mousedown').subscribe((res: MouseEvent) => {
-      if (this.currentTool === Tools.PICKER) {
-        const rect = canvasEl.getBoundingClientRect();
-        const position = {
-          x: res.clientX - rect.left,
-          y: res.clientY - rect.top
-        };
+      else if (this.currentTool === Tools.PICKER) {
         const pixel = this.cx.getImageData(position.x, position.y, 1, 1);
         const data = pixel.data;
         this.canvasService.updateColor(rgbToHex(data[0], data[1], data[2]));
+        this.canvasService.updateActiveTool(Tools.PENCIL);
       }
     });
   }

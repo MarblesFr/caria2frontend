@@ -75,7 +75,7 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
   }
 
   updateCurrentTool(tool: Tools){
-    this.canvasService.notifyUpdateTool(tool);
+    this.canvasService.updateActiveTool(tool);
   }
 
   ngOnDestroy(): void {
