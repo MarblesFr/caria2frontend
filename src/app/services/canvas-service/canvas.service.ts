@@ -3,7 +3,13 @@ import {convertToActualSize} from '../../util/caria.util';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {filterUndefined} from '../../util/FilterUndefined';
-import {Tools} from '../../components/canvas/canvas-tools/canvas-tools.component';
+
+export enum Tools{
+  PENCIL,
+  ERASER,
+  PICKER,
+  FILL
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +17,6 @@ import {Tools} from '../../components/canvas/canvas-tools/canvas-tools.component
 export class CanvasService {
 
   clearCanvas = new EventEmitter();
-
-  updateTool = new EventEmitter<Tools>();
 
   allImages$ = new BehaviorSubject<ImageData[]>([]);
   currentStep$ = new BehaviorSubject<number>(-1);
@@ -22,11 +26,20 @@ export class CanvasService {
   );
 
   size$ = new BehaviorSubject<number>(3);
-
   colors$ = new BehaviorSubject<string[]>(['#000', '#000', '#000', '#000', '#000']);
   activeColorIndex$ = new BehaviorSubject<number>(0);
   activeColor$ = combineLatest([this.colors$, this.activeColorIndex$]).pipe(
     map(value => value[0][value[1]])
+  );
+
+  activeTool$ = new BehaviorSubject<Tools>(Tools.PENCIL);
+
+  canUndo$ = this.currentStep$.pipe(
+    map(value => value > 0)
+  );
+
+  canRedo$ = combineLatest([this.allImages$, this.currentStep$]).pipe(
+    map(value => value[0].length - 1 > value[1])
   );
 
   constructor() {
@@ -75,6 +88,6 @@ export class CanvasService {
   }
 
   notifyUpdateTool(tool: Tools) {
-    this.updateTool.emit(tool);
+    this.activeTool$.next(tool);
   }
 }

@@ -19,22 +19,24 @@
                 vertical>
     </mat-slider>
   </div>
-  <div class="col reset_button">
-    <button (click)="clearCanvas()">Clear</button>
-  </div>
-  <div class="col undo_button">
-    <button (click)="undoLastCanvasStep()">Undo</button>
-  </div>
-  <div class="col redo_button">
-    <button (click)="redoLastCanvasStep()">Redo</button>
-  </div>
-  <div class="col pencil">
-    <button (click)="updateCurrentTool(Tools.PENCIL)">Pencil</button>
-  </div>
-  <div class="col eraser">
-    <button (click)="updateCurrentTool(Tools.ERASER)">Eraser</button>
-  </div>
-  <div class="col picker">
-    <button (click)="updateCurrentTool(Tools.PICKER)">Picker</button>
+  <div *ngVar="(activeTool$ | async) as activeTool" class="container row">
+    <div class="col reset_button button-container">
+      <button (click)="clearCanvas()">Clear</button>
+    </div>
+    <div class="col undo_button button-container" *ngVar="(canUndo$ | async) as canUndo">
+      <button (click)="undoLastCanvasStep()" [disabled]="!canUndo">Undo</button>
+    </div>
+    <div class="col redo_button button-container" *ngVar="(canRedo$ | async) as canRedo">
+      <button (click)="redoLastCanvasStep()" [disabled]="!canRedo">Redo</button>
+    </div>
+    <div class="col pencil button-container">
+      <button (click)="updateCurrentTool(Tools.PENCIL)" *ngVar="activeTool === Tools.PENCIL as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Pencil</button>
+    </div>
+    <div class="col eraser button-container">
+      <button (click)="updateCurrentTool(Tools.ERASER)" *ngVar="activeTool === Tools.ERASER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Eraser</button>
+    </div>
+    <div class="col picker button-container">
+      <button (click)="updateCurrentTool(Tools.PICKER)" *ngVar="activeTool === Tools.PICKER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Picker</button>
+    </div>
   </div>
 </div>
