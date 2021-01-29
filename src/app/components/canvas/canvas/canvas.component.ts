@@ -4,8 +4,7 @@ import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
-import {CanvasService} from '../../../services/canvas-service/canvas.service';
-import {Tools} from '../canvas-tools/canvas-tools.component';
+import {CanvasService, Tools} from '../../../services/canvas-service/canvas.service';
 import {rgbToHex} from '../../../util/caria.util';
 
 @Component({
@@ -102,7 +101,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.activeColorSubscription = this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
     this.brushSizeSubscription = this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
     this.activeImageSubscription = this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
-    this.currentToolSubscription = this.canvasService.updateTool.subscribe((tool) => this.updateTool(tool));
+    this.currentToolSubscription = this.canvasService.activeTool$.subscribe((tool) => this.updateTool(tool));
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {

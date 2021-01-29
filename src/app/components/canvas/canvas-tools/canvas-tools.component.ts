@@ -1,15 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CanvasService} from '../../../services/canvas-service/canvas.service';
+import {CanvasService, Tools} from '../../../services/canvas-service/canvas.service';
 import {Observable, Subscription} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {convertFromActualSize} from '../../../util/caria.util';
-
-export enum Tools{
-  PENCIL,
-  ERASER,
-  PICKER,
-  FILL
-}
 
 @Component({
   selector: 'caria-canvas-tools',
@@ -19,6 +12,11 @@ export enum Tools{
 export class CanvasToolsComponent implements OnInit, OnDestroy {
 
   Tools = Tools;
+
+  activeTool$: Observable<Tools>;
+
+  canUndo$: Observable<boolean>;
+  canRedo$: Observable<boolean>;
 
   selectedColorIndex$: Observable<number>;
 
@@ -36,6 +34,9 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
   constructor(private canvasService: CanvasService) { }
 
   ngOnInit(): void {
+    this.canUndo$ = this.canvasService.canUndo$;
+    this.canRedo$ = this.canvasService.canRedo$;
+    this.activeTool$ = this.canvasService.activeTool$;
     this.brushSize$ = this.canvasService.size$.pipe(map(value => Math.round(value)));
     this.arrayColors$ = this.canvasService.colors$;
     this.selectedColorIndex$ = this.canvasService.activeColorIndex$;

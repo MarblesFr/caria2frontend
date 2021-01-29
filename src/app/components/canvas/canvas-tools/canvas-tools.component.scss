@@ -60,7 +60,6 @@ mat-slider{
 button{
   width: 50%;
   height: 15%;
-  margin: 80% 10% 0 10%;
   text-align: center;
   transition: all 0.2s;
   background: gray;
@@ -72,7 +71,7 @@ button{
   outline: none;
 }
 
-button:hover{
+button:hover:active{
   background-color: darkgray;
 }
 
@@ -83,4 +82,14 @@ button:hover{
 
 .color_picker{
   height: 100%;
+}
+
+.isActive{
+  background-color: darkgray;
+}
+
+.button-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
