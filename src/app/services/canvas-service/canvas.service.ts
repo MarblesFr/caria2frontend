@@ -4,7 +4,7 @@ import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {filterUndefined} from '../../util/FilterUndefined';
 
-export enum Tools{
+export enum Tool{
   PENCIL,
   ERASER,
   PICKER,
@@ -32,7 +32,7 @@ export class CanvasService {
     map(value => value[0][value[1]])
   );
 
-  activeTool$ = new BehaviorSubject<Tools>(Tools.PENCIL);
+  activeTool$ = new BehaviorSubject<Tool>(Tool.PENCIL);
 
   canUndo$ = this.currentStep$.pipe(
     map(value => value > 0)
@@ -87,7 +87,7 @@ export class CanvasService {
     this.size$.next(convertToActualSize(size));
   }
 
-  updateActiveTool(tool: Tools) {
+  updateActiveTool(tool: Tool) {
     this.activeTool$.next(tool);
   }
 }

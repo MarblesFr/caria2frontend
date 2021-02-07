@@ -22,6 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {VarDirective} from './util/ng-var.directive';
 import {MatIconModule} from '@angular/material/icon';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { ActionButtonComponent } from './components/action-button/action-button.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     AiOutputComponent,
     SliderWindowComponent,
     VarDirective,
+    ActionButtonComponent,
   ],
   imports: [
     BrowserModule,

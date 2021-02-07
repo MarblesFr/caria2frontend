@@ -4,7 +4,7 @@ import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
-import {CanvasService, Tools} from '../../../services/canvas-service/canvas.service';
+import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
 import {rgbToHex} from '../../../util/caria.util';
 
 @Component({
@@ -41,7 +41,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   activeImageSubscription: Subscription;
   currentToolSubscription: Subscription;
 
-  public currentTool = Tools.PENCIL;
+  public currentTool = Tool.PENCIL;
   public currentImage: ImageData;
 
   @HostListener('window:resize', ['$event'])
@@ -128,12 +128,12 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
           x: res[1].clientX - rect.left,
           y: res[1].clientY - rect.top
         };
-        if (this.currentTool === Tools.ERASER)
+        if (this.currentTool === Tool.ERASER)
         {
           this.cx.strokeStyle = '#FFF';
           this.drawOnCanvas(prevPos, currentPos);
         }
-        else if (this.currentTool === Tools.PENCIL){
+        else if (this.currentTool === Tool.PENCIL){
           this.cx.strokeStyle = this.activeColor;
           this.drawOnCanvas(prevPos, currentPos);
         }
@@ -147,20 +147,20 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         x: res.clientX - rect.left,
         y: res.clientY - rect.top
       };
-      if (this.currentTool === Tools.ERASER)
+      if (this.currentTool === Tool.ERASER)
       {
         this.cx.strokeStyle = '#FFF';
         this.drawPointOnCanvas(position);
       }
-      else if (this.currentTool === Tools.PENCIL){
+      else if (this.currentTool === Tool.PENCIL){
         this.cx.strokeStyle = this.activeColor;
         this.drawPointOnCanvas(position);
       }
-      else if (this.currentTool === Tools.PICKER) {
+      else if (this.currentTool === Tool.PICKER) {
         const pixel = this.cx.getImageData(position.x, position.y, 1, 1);
         const data = pixel.data;
         this.canvasService.updateColor(rgbToHex(data[0], data[1], data[2]));
-        this.canvasService.updateActiveTool(Tools.PENCIL);
+        this.canvasService.updateActiveTool(Tool.PENCIL);
       }
     });
   }
@@ -231,7 +231,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  private updateTool(tool: Tools) {
+  private updateTool(tool: Tool) {
     this.currentTool = tool;
   }
 

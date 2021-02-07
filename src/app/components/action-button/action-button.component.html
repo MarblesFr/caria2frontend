@@ -1,0 +1,6 @@
+<div ngbDropdown display="dynamic" placement="bottom" class="d-inline-block" *ngIf="(dropdownItems$ | async) as items">
+  <button class="btn btn-outline-dark" id="dropdownBasic1" ngbDropdownToggle>Actions</button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+    <button ngbDropdownItem *ngFor="let item of items" (click)="clickItem(item)">{{item}}</button>
+  </div>
+</div>

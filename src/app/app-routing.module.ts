@@ -4,12 +4,18 @@ import {CanvasPageComponent} from './components/canvas/canvas-page/canvas-page.c
 import {SliderPageComponent} from './components/sliders/slider-page/slider-page.component';
 import {FullscreenPageComponent} from './components/fullscreen-page/fullscreen-page.component';
 
+export enum Page {
+  SLIDER = 'slider',
+  FULLSCREEN = 'fullscreen',
+  CANVAS = 'canvas'
+}
+
 const routes: Routes = [
-  {path: 'canvas', component: CanvasPageComponent},
-  {path: 'slider', component: SliderPageComponent},
-  {path: 'fullscreen', component: FullscreenPageComponent},
-  {path: '', redirectTo: '/fullscreen', pathMatch: 'full'},
-  {path: '**', redirectTo: '/fullscreen', pathMatch: 'full'}
+  {path: Page.CANVAS, component: CanvasPageComponent},
+  {path: Page.SLIDER, component: SliderPageComponent},
+  {path: Page.FULLSCREEN, component: FullscreenPageComponent},
+  {path: '', redirectTo: Page.FULLSCREEN, pathMatch: 'full'},
+  {path: '**', redirectTo: Page.FULLSCREEN, pathMatch: 'full'}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {CariaActions} from '../../services/caria-service';
@@ -8,14 +8,12 @@ import {CariaActions} from '../../services/caria-service';
   templateUrl: './fullscreen-page.component.html',
   styleUrls: ['./fullscreen-page.component.scss']
 })
-export class FullscreenPageComponent implements OnInit {
+export class FullscreenPageComponent {
 
   constructor(
     private router: Router,
-    private readonly store$: Store
-  ) { }
-
-  ngOnInit(): void {
+    private readonly store$: Store,
+  ) {
   }
 
   generateNewOutput(): void {
