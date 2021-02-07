@@ -30,13 +30,13 @@
       <button (click)="redoLastCanvasStep()" [disabled]="!canRedo">Redo</button>
     </div>
     <div class="col pencil button-container">
-      <button (click)="updateCurrentTool(Tools.PENCIL)" *ngVar="activeTool === Tools.PENCIL as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Pencil</button>
+      <button (click)="updateCurrentTool(Tool.PENCIL)" *ngVar="activeTool === Tool.PENCIL as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Pencil</button>
     </div>
     <div class="col eraser button-container">
-      <button (click)="updateCurrentTool(Tools.ERASER)" *ngVar="activeTool === Tools.ERASER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Eraser</button>
+      <button (click)="updateCurrentTool(Tool.ERASER)" *ngVar="activeTool === Tool.ERASER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Eraser</button>
     </div>
     <div class="col picker button-container">
-      <button (click)="updateCurrentTool(Tools.PICKER)" *ngVar="activeTool === Tools.PICKER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Picker</button>
+      <button (click)="updateCurrentTool(Tool.PICKER)" *ngVar="activeTool === Tool.PICKER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Picker</button>
     </div>
   </div>
 </div>

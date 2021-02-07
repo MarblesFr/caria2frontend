@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CanvasService, Tools} from '../../../services/canvas-service/canvas.service';
+import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
 import {Observable, Subscription} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 import {convertFromActualSize} from '../../../util/caria.util';
@@ -11,9 +11,9 @@ import {convertFromActualSize} from '../../../util/caria.util';
 })
 export class CanvasToolsComponent implements OnInit, OnDestroy {
 
-  Tools = Tools;
+  Tool = Tool;
 
-  activeTool$: Observable<Tools>;
+  activeTool$: Observable<Tool>;
 
   canUndo$: Observable<boolean>;
   canRedo$: Observable<boolean>;
@@ -74,7 +74,7 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
     return convertFromActualSize(size);
   }
 
-  updateCurrentTool(tool: Tools){
+  updateCurrentTool(tool: Tool){
     this.canvasService.updateActiveTool(tool);
   }
 
