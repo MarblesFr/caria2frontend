@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
-import {fromEvent, Subscription} from 'rxjs';
+import {fromEvent, Subject} from 'rxjs';
 import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
-import {CariaActions} from '../../../services/caria-service';
 import {CariaService} from '../../../services/caria-service/caria.service';
 import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
 import {rgbToHex} from '../../../util/caria.util';
@@ -34,12 +33,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   public height = this.width / 3;
   private cx: CanvasRenderingContext2D;
 
-  firstStepSubscription: Subscription;
-  clearCanvasSubscription: Subscription;
-  activeColorSubscription: Subscription;
-  brushSizeSubscription: Subscription;
-  activeImageSubscription: Subscription;
-  currentToolSubscription: Subscription;
+  private readonly unsubscribe$ = new Subject<void>();
 
   public currentTool = Tool.PENCIL;
   public currentImage: ImageData;
@@ -87,7 +81,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.canvaselement = canvasEl;
     this.captureEvents(canvasEl);
 
-    this.firstStepSubscription = this.canvasService.currentStep$.pipe(
+    this.canvasService.currentStep$.pipe(
       take(1)
     ).subscribe(
       index => {
@@ -97,11 +91,11 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
       }
     );
 
-    this.clearCanvasSubscription = this.canvasService.clearCanvas.subscribe(() => this.clearCanvas());
-    this.activeColorSubscription = this.canvasService.activeColor$.subscribe((color) => this.changeColor(color));
-    this.brushSizeSubscription = this.canvasService.size$.subscribe((size) => this.changeBrushSize(size));
-    this.activeImageSubscription = this.canvasService.activeImage$.subscribe((image) => this.updateImage(image));
-    this.currentToolSubscription = this.canvasService.activeTool$.subscribe((tool) => this.updateTool(tool));
+    this.canvasService.clearCanvas.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.clearCanvas());
+    this.canvasService.activeColor$.pipe(takeUntil(this.unsubscribe$)).subscribe((color) => this.changeColor(color));
+    this.canvasService.size$.pipe(takeUntil(this.unsubscribe$)).subscribe((size) => this.changeBrushSize(size));
+    this.canvasService.activeImage$.pipe(takeUntil(this.unsubscribe$)).subscribe((image) => this.updateImage(image));
+    this.canvasService.activeTool$.pipe(takeUntil(this.unsubscribe$)).subscribe((tool) => this.updateTool(tool));
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -209,9 +203,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   public updateOutput() {
     this.canvaselement.toBlob(blob => {
-      this.cariaService.getValuesFromImage(blob).subscribe(
-        values => this.store$.dispatch(CariaActions.updateValues({values}))
-      );
+      this.cariaService.updateValuesFromImage(blob);
     });
   }
 
@@ -235,12 +227,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     this.currentTool = tool;
   }
 
-  ngOnDestroy(): void {
-    this.firstStepSubscription.unsubscribe();
-    this.clearCanvasSubscription.unsubscribe();
-    this.activeColorSubscription.unsubscribe();
-    this.brushSizeSubscription.unsubscribe();
-    this.activeImageSubscription.unsubscribe();
-    this.currentToolSubscription.unsubscribe();
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

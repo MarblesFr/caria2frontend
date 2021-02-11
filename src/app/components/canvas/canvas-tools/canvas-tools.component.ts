@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
-import {Observable, Subscription} from 'rxjs';
-import {map, take} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {map, take, takeUntil} from 'rxjs/operators';
 import {convertFromActualSize} from '../../../util/caria.util';
 
 @Component({
@@ -28,8 +28,7 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
 
   activeColor: string;
 
-  activeColorSubscription: Subscription;
-  initialBrushSizeSubscription: Subscription;
+  private readonly unsubscribe$ = new Subject<void>();
 
   constructor(private canvasService: CanvasService) { }
 
@@ -40,8 +39,9 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
     this.brushSize$ = this.canvasService.size$.pipe(map(value => Math.round(value)));
     this.arrayColors$ = this.canvasService.colors$;
     this.selectedColorIndex$ = this.canvasService.activeColorIndex$;
-    this.activeColorSubscription = this.canvasService.activeColor$.subscribe(value => this.activeColor = value);
-    this.initialBrushSizeSubscription = this.brushSize$.pipe(
+    this.canvasService.activeColor$.pipe(takeUntil(this.unsubscribe$)).subscribe(value => this.activeColor = value);
+    this.brushSize$.pipe(
+      takeUntil(this.unsubscribe$),
       take(1)
     ).subscribe(value => this.initialBrushValue = value);
   }
@@ -78,8 +78,8 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
     this.canvasService.updateActiveTool(tool);
   }
 
-  ngOnDestroy(): void {
-    this.activeColorSubscription.unsubscribe();
-    this.initialBrushSizeSubscription.unsubscribe();
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
