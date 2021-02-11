@@ -27,6 +27,7 @@ export class ActionService {
       }),
       filterUndefined()
     );
+
   actions$ = this._activePage$.pipe(
     map(page => {
       const actions: Action[] = [];

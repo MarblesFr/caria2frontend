@@ -1,7 +1,8 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {CariaService} from '../../services/caria-service/caria.service';
 import {SafeUrl} from '@angular/platform-browser';
-import {Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'caria-ai-output',
@@ -13,17 +14,18 @@ export class AiOutputComponent implements OnInit, OnDestroy {
 
   dataUrl: SafeUrl;
 
-  getSubscription: Subscription;
+  private readonly unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.getSubscription = this.cariaService.getCar().subscribe(imageUrl => {
+    this.cariaService.currentCar$.pipe(takeUntil(this.unsubscribe$)).subscribe(imageUrl => {
       this.ngZone.run(() => {
         this.dataUrl = imageUrl;
       });
     });
   }
 
-  ngOnDestroy(): void {
-    this.getSubscription.unsubscribe();
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

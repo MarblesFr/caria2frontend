@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
-import {CariaSelectors} from './index';
+import {CariaActions, CariaSelectors} from './index';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
 
@@ -21,28 +20,28 @@ export class CariaService {
   ) {
   }
 
+  currentCar$ = this.store$.pipe(
+    select(CariaSelectors.getValues),
+    filterUndefined(),
+    switchMap(values => {
+      return this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+    }),
+    map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)))
+  );
+
   baseUrl = 'http://localhost:8000/';
 
-  getCar(): Observable<SafeUrl> {
-    return this.store$.pipe(
-      select(CariaSelectors.getValues),
-      filterUndefined(),
-      switchMap(values => {
-        return this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
-      }),
-      map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)))
-    );
-  }
-
-  getValuesFromImage(image: Blob): Observable<any> {
+  updateValuesFromImage(image: Blob) {
     const imageFile = new File([image], 'image.png', {type: 'image/png', lastModified: Date.now()});
-    return this.ng2ImgMax.resizeImage(imageFile, 192, 64)
+    this.ng2ImgMax.resizeImage(imageFile, 192, 64)
       .pipe(
         switchMap(scaledImage => {
           const formData = new FormData();
           formData.append('image', scaledImage);
-          return this.http.post(this.baseUrl + 'canvas', formData);
+          return this.http.post<number[]>(this.baseUrl + 'canvas', formData);
         })
+      ).subscribe(
+        values => this.store$.dispatch(CariaActions.updateValues({values}))
       );
   }
 }
