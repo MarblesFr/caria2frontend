@@ -17,7 +17,7 @@ export class AiOutputComponent implements OnInit, OnDestroy {
   private readonly unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.cariaService.currentCar$.pipe(takeUntil(this.unsubscribe$)).subscribe(imageUrl => {
+    this.cariaService.currentOutput$.pipe(takeUntil(this.unsubscribe$)).subscribe(imageUrl => {
       this.ngZone.run(() => {
         this.dataUrl = imageUrl;
       });

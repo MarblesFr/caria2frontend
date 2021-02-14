@@ -20,13 +20,16 @@ export class CariaService {
   ) {
   }
 
-  currentCar$ = this.store$.pipe(
+  currentOutputBlob$ = this.store$.pipe(
     select(CariaSelectors.getValues),
     filterUndefined(),
     switchMap(values => {
       return this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
     }),
-    map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)))
+  );
+
+  currentOutput$ = this.currentOutputBlob$.pipe(
+    map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)) as string)
   );
 
   baseUrl = 'http://localhost:8000/';

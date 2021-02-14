@@ -18,7 +18,7 @@ export class CanvasService {
 
   clearCanvas = new EventEmitter();
 
-  private _allImages$ = new BehaviorSubject<ImageData[]>([]);
+  private _allImages$ = new BehaviorSubject<Blob[]>([]);
   allImages$ = this._allImages$.asObservable();
 
   private _currentStep$ = new BehaviorSubject<number>(-1);
@@ -60,7 +60,7 @@ export class CanvasService {
     this.clearCanvas.emit();
   }
 
-  updateImage(image: ImageData) {
+  updateImage(image: Blob) {
     let images = this._allImages$.value;
     const currentStep = this._currentStep$.value;
     images = images.slice(0, currentStep + 1);

@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
-import {filter, map} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {filter, first, map} from 'rxjs/operators';
 import {NavigationEnd, Router} from '@angular/router';
 import {Page} from '../../app-routing.module';
 import {filterUndefined} from '../../util/FilterUndefined';
+import {CariaService} from '../caria-service/caria.service';
+import {saveAs} from 'file-saver';
+import {CanvasService} from '../canvas-service/canvas.service';
 
-export enum Action{
+export enum Action {
   EXPORTIMG = 'Export Image',
   IMPORTIMG = 'Import Image',
   EXPORTSLIDERS = 'Export Sliders',
@@ -34,15 +37,15 @@ export class ActionService {
       actions.push(Action.EXPORTIMG, Action.IMPORTIMG);
       if (page === Page.SLIDER) {
         actions.push(Action.EXPORTSLIDERS, Action.IMPORTSLIDERS);
-      }
-      else if (page === Page.CANVAS) {
+      } else if (page === Page.CANVAS) {
         actions.push(Action.EXPORTCANVAS, Action.IMPORTCANVAS, Action.OUTPUT2CANVAS);
       }
       return actions;
     })
   );
 
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router, private readonly cariaService: CariaService, private readonly canvasService: CanvasService) {
+  }
 
   executeAction(item: Action) {
     switch (item) {
@@ -73,11 +76,18 @@ export class ActionService {
   }
 
   exportImage() {
-
+    this.cariaService.currentOutputBlob$.pipe(first()).subscribe(image => saveAs(image, 'output.png'));
   }
 
   importImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
 
+    input.onchange = () => {
+      this.cariaService.updateValuesFromImage(input.files[0]);
+    };
+
+    input.click();
   }
 
   exportSliders() {
@@ -89,14 +99,22 @@ export class ActionService {
   }
 
   outputToCanvas() {
-
+    this.cariaService.currentOutputBlob$.pipe(first())
+      .subscribe(image => this.canvasService.updateImage(image));
   }
 
   exportCanvas() {
-
+    this.canvasService.activeImage$.pipe(first()).subscribe(image => saveAs(image, 'canvas.png'));
   }
 
   importCanvas() {
+    const input = document.createElement('input');
+    input.type = 'file';
 
+    input.onchange = () => {
+      this.canvasService.updateImage(input.files[0]);
+    };
+
+    input.click();
   }
 }
