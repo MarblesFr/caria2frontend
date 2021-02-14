@@ -36,7 +36,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private readonly unsubscribe$ = new Subject<void>();
 
   public currentTool = Tool.PENCIL;
-  public currentImage: ImageData;
+  public currentImage: Blob;
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -86,7 +86,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     ).subscribe(
       index => {
         if (index < 0) {
-          this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
+          this.saveCurrentCanvasState();
         }
       }
     );
@@ -208,10 +208,12 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   public saveCurrentCanvasState() {
-    this.canvasService.updateImage(this.cx.getImageData(0, 0, this.width, this.height));
+    this.canvaselement.toBlob(blob => {
+      this.canvasService.updateImage(blob);
+    });
   }
 
-  public updateImage(imageData: ImageData) {
+  public updateImage(imageData: Blob) {
     this.currentImage = imageData;
     this.setImageToCanvas();
     this.updateOutput();
