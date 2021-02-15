@@ -1,15 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {CariaActions, CariaSelectors} from '../../../services/caria-service';
+import {Component} from '@angular/core';
 import {SLIDER_COUNT, VALUE_RANGE} from '../../../services/caria-service/caria.config';
+import {CariaService} from '../../../services/caria-service/caria.service';
 
 @Component({
   selector: 'caria-slider-window',
   templateUrl: './slider-window.component.html',
   styleUrls: ['./slider-window.component.scss']
 })
-export class SliderWindowComponent implements OnInit {
+export class SliderWindowComponent {
 
   SLIDER_COUNT = SLIDER_COUNT;
   VALUE_RANGE = VALUE_RANGE;
@@ -17,19 +15,15 @@ export class SliderWindowComponent implements OnInit {
   pages = 4;
   currentPage = 0;
 
-  @Input()
-  values$: Observable<number[]>;
+  values$ = this.cariaService.values$;
 
   constructor(
-    private readonly store$: Store
-  ) { }
-
-  ngOnInit(): void {
-    this.values$ = this.store$.select(CariaSelectors.getValues);
+    private readonly cariaService: CariaService
+  ) {
   }
 
   updateSlider(index: number, value: number): void {
-    this.store$.dispatch(CariaActions.updateValue({ index, value }));
+    this.cariaService.updateValue(index, value);
   }
 
   previousPage(): void {
