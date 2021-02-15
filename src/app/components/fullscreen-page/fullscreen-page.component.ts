@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {CariaActions} from '../../services/caria-service';
+import {CariaService} from '../../services/caria-service/caria.service';
 
 @Component({
   selector: 'caria-fullscreen-page',
@@ -12,12 +11,12 @@ export class FullscreenPageComponent {
 
   constructor(
     private router: Router,
-    private readonly store$: Store,
+    private readonly cariaService: CariaService,
   ) {
   }
 
   generateNewOutput(): void {
-    this.store$.dispatch(CariaActions.randomizeValues());
+    this.cariaService.randomizeValues();
   }
 
   startEditing(): void {

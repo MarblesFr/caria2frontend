@@ -14,9 +14,7 @@ import { AiOutputComponent } from './components/ai-output/ai-output.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
-import { StoreModule } from '@ngrx/store';
 import { ColorPickerModule } from 'ngx-color-picker';
-import {RootStoreModule} from './services/root-store.module';
 import {SliderWindowComponent} from './components/sliders/slider-window/slider-window.component';
 import {MatButtonModule} from '@angular/material/button';
 import {VarDirective} from './util/ng-var.directive';
@@ -46,11 +44,9 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     HttpClientModule,
     BrowserAnimationsModule,
     MatSliderModule,
-    StoreModule.forRoot({}, {}),
     ColorPickerModule,
     MatButtonModule,
     MatIconModule,
-    RootStoreModule.forRoot(),
     Ng2ImgMaxModule,
   ],
   providers: [],

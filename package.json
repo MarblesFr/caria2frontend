@@ -25,7 +25,6 @@
     "@angular/platform-browser-dynamic": "~11.0.9",
     "@angular/router": "~11.0.9",
     "@ng-bootstrap/ng-bootstrap": "^8.0.2",
-    "@ngrx/store": "^10.1.2",
     "angular": "^1.8.2",
     "bootstrap": "^4.5.3",
     "file-saver": "^2.0.5",
