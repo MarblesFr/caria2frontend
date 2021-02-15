@@ -34,10 +34,8 @@ export class ActionService {
   actions$ = this._activePage$.pipe(
     map(page => {
       const actions: Action[] = [];
-      actions.push(Action.EXPORTIMG, Action.IMPORTIMG);
-      if (page === Page.SLIDER) {
-        actions.push(Action.EXPORTSLIDERS, Action.IMPORTSLIDERS);
-      } else if (page === Page.CANVAS) {
+      actions.push(Action.EXPORTIMG, Action.IMPORTIMG, Action.EXPORTSLIDERS, Action.IMPORTSLIDERS);
+      if (page === Page.CANVAS) {
         actions.push(Action.EXPORTCANVAS, Action.IMPORTCANVAS, Action.OUTPUT2CANVAS);
       }
       return actions;
@@ -91,11 +89,24 @@ export class ActionService {
   }
 
   exportSliders() {
-
+    this.cariaService.values$.pipe(first())
+      .subscribe(values => {
+        const valueBlob = new Blob([JSON.stringify(values)], {type: 'text/plain;charset=utf-8'});
+        saveAs(valueBlob, 'values.caria');
+      });
   }
 
   importSliders() {
+    const input = document.createElement('input');
+    input.type = 'file';
 
+    input.onchange = () => {
+      input.files[0].text().then(value => {
+        this.cariaService.updateValues(JSON.parse(value));
+      });
+    };
+
+    input.click();
   }
 
   outputToCanvas() {
