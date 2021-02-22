@@ -62,7 +62,7 @@ export class CarService {
 
   valuesToUrl(values: number[]) {
     return this.valuesToBlob(values).pipe(
-      switchMap(
+      map(
         value => this.blobToUrl(value)
       )
     );
