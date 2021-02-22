@@ -21,6 +21,10 @@ import {VarDirective} from './util/ng-var.directive';
 import {MatIconModule} from '@angular/material/icon';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
+import {StoreModule} from '@ngrx/store';
+import {RootStoreModule} from './services/root-store.module';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {EffectsModule} from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -48,6 +52,10 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     MatButtonModule,
     MatIconModule,
     Ng2ImgMaxModule,
+    InfiniteScrollModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]),
+    RootStoreModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
