@@ -3,7 +3,7 @@ import {filter, first, map} from 'rxjs/operators';
 import {NavigationEnd, Router} from '@angular/router';
 import {Page} from '../../app-routing.module';
 import {filterUndefined} from '../../util/FilterUndefined';
-import {CariaService} from '../caria-service/caria.service';
+import {CarService} from '../car-service/car.service';
 import {saveAs} from 'file-saver';
 import {CanvasService} from '../canvas-service/canvas.service';
 
@@ -42,7 +42,7 @@ export class ActionService {
     })
   );
 
-  constructor(private readonly router: Router, private readonly cariaService: CariaService, private readonly canvasService: CanvasService) {
+  constructor(private readonly router: Router, private readonly cariaService: CarService, private readonly canvasService: CanvasService) {
   }
 
   executeAction(item: Action) {

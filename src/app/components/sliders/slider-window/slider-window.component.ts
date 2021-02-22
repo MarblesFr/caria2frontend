@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {SLIDER_COUNT, VALUE_RANGE} from '../../../services/caria-service/caria.config';
-import {CariaService} from '../../../services/caria-service/caria.service';
+import {SLIDER_COUNT, VALUE_RANGE} from '../../../services/car-service/car.config';
+import {CarService} from '../../../services/car-service/car.service';
 
 @Component({
   selector: 'caria-slider-window',
@@ -18,7 +18,7 @@ export class SliderWindowComponent {
   values$ = this.cariaService.values$;
 
   constructor(
-    private readonly cariaService: CariaService
+    private readonly cariaService: CarService
   ) {
   }
 

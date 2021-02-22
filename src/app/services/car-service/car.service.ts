@@ -6,11 +6,12 @@ import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
 import {BehaviorSubject} from 'rxjs';
 import {randomValues} from '../../util/caria.util';
+import {BASE_URL} from './car.config';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CariaService {
+export class CarService {
 
   constructor(
     private http: HttpClient,
@@ -24,16 +25,12 @@ export class CariaService {
 
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
-    switchMap(values => {
-      return this.http.get(this.baseUrl + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
-    }),
+    switchMap(values => this.valuesToBlob(values)),
   );
 
   currentOutput$ = this.currentOutputBlob$.pipe(
-    map(img => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)) as string)
+    map(img => this.blobToUrl(img))
   );
-
-  baseUrl = 'http://localhost:8000/';
 
   updateValues(values: number[]) {
     this._values$.next(values);
@@ -56,10 +53,26 @@ export class CariaService {
         switchMap(scaledImage => {
           const formData = new FormData();
           formData.append('image', scaledImage);
-          return this.http.post<number[]>(this.baseUrl + 'canvas', formData);
+          return this.http.post<number[]>(BASE_URL + 'canvas', formData);
         })
       ).subscribe(
         values => this.updateValues(values)
       );
+  }
+
+  valuesToUrl(values: number[]) {
+    return this.valuesToBlob(values).pipe(
+      switchMap(
+        value => this.blobToUrl(value)
+      )
+    );
+  }
+
+  valuesToBlob(values: number[]) {
+    return this.http.get(BASE_URL + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+  }
+
+  blobToUrl(img: Blob) {
+    return this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(img)) as string;
   }
 }

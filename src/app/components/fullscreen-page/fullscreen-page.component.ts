@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
-import {CariaService} from '../../services/caria-service/caria.service';
+import {CarService} from '../../services/car-service/car.service';
 
 @Component({
   selector: 'caria-fullscreen-page',
@@ -11,7 +11,7 @@ export class FullscreenPageComponent {
 
   constructor(
     private router: Router,
-    private readonly cariaService: CariaService,
+    private readonly cariaService: CarService,
   ) {
   }
 

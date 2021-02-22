@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
 import {pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
-import {CariaService} from '../../../services/caria-service/caria.service';
+import {CarService} from '../../../services/car-service/car.service';
 import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
 import {rgbToHex} from '../../../util/caria.util';
 
@@ -18,7 +18,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private activeColor: string;
 
   constructor(
-    private cariaService: CariaService,
+    private cariaService: CarService,
     private canvasService: CanvasService) {
     this.onResize();
   }
