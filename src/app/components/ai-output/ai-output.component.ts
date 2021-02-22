@@ -1,5 +1,5 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {CariaService} from '../../services/caria-service/caria.service';
+import {CarService} from '../../services/car-service/car.service';
 import {SafeUrl} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -10,7 +10,7 @@ import {takeUntil} from 'rxjs/operators';
   styleUrls: ['./ai-output.component.scss']
 })
 export class AiOutputComponent implements OnInit, OnDestroy {
-  constructor(private cariaService: CariaService, private ngZone: NgZone) { }
+  constructor(private cariaService: CarService, private ngZone: NgZone) { }
 
   dataUrl: SafeUrl;
 

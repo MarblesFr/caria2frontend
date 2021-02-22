@@ -1,4 +1,4 @@
-import {SLIDER_COUNT, VALUE_RANGE} from '../services/caria-service/caria.config';
+import {SLIDER_COUNT, VALUE_RANGE} from '../services/car-service/car.config';
 
 export function randomValues(): number[] {
   return Array.from({length: SLIDER_COUNT}, () => Math.random() * VALUE_RANGE * 2 - VALUE_RANGE);
