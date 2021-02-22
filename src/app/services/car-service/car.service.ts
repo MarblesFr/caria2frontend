@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeAll, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {randomValues} from '../../util/caria.util';
 import {BASE_URL} from './car.config';
+import {Car} from '../../models';
 
 @Injectable({
   providedIn: 'root'
@@ -60,16 +61,29 @@ export class CarService {
       );
   }
 
-  valuesToUrl(values: number[]) {
-    return this.valuesToBlob(values).pipe(
-      map(
-        value => this.blobToUrl(value)
-      )
+  multipleValuesToCars(values: number[][]): Observable<Car> {
+    return this.multipleValuesToUrls(values).pipe(
+      map(urls => values.map((value, index) => {
+        return {
+          values: value,
+          url: urls[index]
+        };
+      })),
+      mergeAll()
     );
   }
 
   valuesToBlob(values: number[]) {
     return this.http.get(BASE_URL + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+  }
+
+  multipleValuesToUrls(values: number[][]) {
+    return this.http.get(BASE_URL + 'getMultiple', {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
+      map((value: string[]) =>
+        value.map(imageValues => {
+          return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;
+        }))
+    );
   }
 
   blobToUrl(img: Blob) {
