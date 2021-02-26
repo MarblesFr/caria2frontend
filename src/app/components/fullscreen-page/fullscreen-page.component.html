@@ -3,10 +3,20 @@
   <div class="outputImage">
     <caria-ai-output></caria-ai-output>
   </div>
-  <button (click)="generateNewOutput()">
-    Generate
-  </button>
-  <button (click)="startEditing()">
-    Edit
-  </button>
+  <div class="scroll-container">
+    <div
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      [infiniteScrollContainer]="selector"
+      [fromRoot]="true"
+      (scrolled)="generateNewOutput()"
+    >
+      <div *ngIf="(cars$ | async) as cars">
+        <div *ngFor="let car of cars; index as i">
+          <img [src]="car.url" alt="AI-Output image" (click)="setActive(i)" />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

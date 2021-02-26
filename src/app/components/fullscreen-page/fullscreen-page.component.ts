@@ -1,26 +1,35 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {CarService} from '../../services/car-service/car.service';
+import {Store} from '@ngrx/store';
+import {RootState} from '../../services/root-state';
+import {ExploreActions, ExploreSelectors} from '../../services/explore-store';
 
 @Component({
   selector: 'caria-fullscreen-page',
   templateUrl: './fullscreen-page.component.html',
   styleUrls: ['./fullscreen-page.component.scss']
 })
-export class FullscreenPageComponent {
+export class FullscreenPageComponent implements OnInit{
+  selector = '.scroll-container';
 
   constructor(
     private router: Router,
-    private readonly cariaService: CarService,
+    private readonly store$: Store<RootState>,
   ) {
   }
 
-  generateNewOutput(): void {
-    this.cariaService.randomizeValues();
+  cars$ = this.store$.select(ExploreSelectors.getCars);
+
+  generateNewOutput() {
+    this.store$.dispatch(ExploreActions.loadCars());
   }
 
-  startEditing(): void {
-    this.router.navigate(['/slider']);
+  setActive(index: number) {
+    this.store$.dispatch(ExploreActions.setAsActive({ index }));
   }
 
+  ngOnInit(): void {
+    this.generateNewOutput();
+    this.generateNewOutput();
+  }
 }
