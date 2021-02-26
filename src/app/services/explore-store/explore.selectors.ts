@@ -6,10 +6,10 @@ export const selectCariaState = createFeatureSelector<RootState, State>(exploreF
 
 export const getCars = createSelector(
   selectCariaState,
-  (state: State) => state.cars
+  (state: State) => state.viewCars
 );
 
 export const getCar = createSelector(
   selectCariaState,
-  (state: State, props: { index: number }) => state.cars[props.index]
+  (state: State, props: { index: number }) => state.viewCars[props.index]
 );

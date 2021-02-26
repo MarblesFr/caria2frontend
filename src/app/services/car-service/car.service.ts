@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, mergeAll, switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
@@ -61,15 +61,14 @@ export class CarService {
       );
   }
 
-  multipleValuesToCars(values: number[][]): Observable<Car> {
+  multipleValuesToCars(values: number[][]): Observable<Car[]> {
     return this.multipleValuesToUrls(values).pipe(
       map(urls => values.map((value, index) => {
         return {
           values: value,
           url: urls[index]
         };
-      })),
-      mergeAll()
+      }))
     );
   }
 

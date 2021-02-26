@@ -3,7 +3,7 @@ import {CarService} from '../car-service/car.service';
 import {Store} from '@ngrx/store';
 import {RootState} from '../root-state';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {loadCarFailed, loadCars, loadCarSuccess, setAsActive, setAsActiveFailed, setAsActiveSuccess} from './explore.actions';
+import {loadCarsFailed, loadCars, loadCarsSuccess, setAsActive, setAsActiveFailed, setAsActiveSuccess} from './explore.actions';
 import {catchError, concatMap, first, map, tap} from 'rxjs/operators';
 import {ADD_AMOUNT} from './explore.config';
 import {randomValues} from '../../util/caria.util';
@@ -25,8 +25,8 @@ export class ExploreEffects {
       ofType(loadCars),
       map(() => Array.from({length: ADD_AMOUNT}, () => randomValues())),
       concatMap((values) => this.carService.multipleValuesToCars(values)),
-      map((car) => loadCarSuccess({ car })),
-      catchError(() => of(loadCarFailed()))
+      map((cars) => loadCarsSuccess({ cars })),
+      catchError(() => of(loadCarsFailed()))
     )
   );
 
