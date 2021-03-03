@@ -1,1 +1,2 @@
-export * from './Car';
+export * from './car.model';
+export * from './navbar-item.model';
