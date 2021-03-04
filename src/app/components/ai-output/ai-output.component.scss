@@ -1,11 +1,5 @@
-.imageContainer {
+.outputImage {
+  height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: center;
-
-  .outputImage {
-    width: 95%;
-    height: auto;
-    padding-bottom: 5%;
-  }
+  object-fit: contain
 }

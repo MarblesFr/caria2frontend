@@ -19,6 +19,7 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   cars$ = this.store$.select(ExploreSelectors.getCars);
+  carsPerRow: 3;
 
   generateNewOutput() {
     this.store$.dispatch(ExploreActions.loadCars());
@@ -29,6 +30,7 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.generateNewOutput();
     this.generateNewOutput();
     this.generateNewOutput();
   }
