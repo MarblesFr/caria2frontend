@@ -1,35 +1,87 @@
-.outputImage{
-  width: 100%;
-  height: 33%;
-  margin-top: 5%;
-  margin-bottom: 5%;
-}
-
-button{
-  width: 30%;
-  height: 30%;
-  margin: 0 10% 0 10%;
-  text-align: center;
-  transition: all 0.2s;
-  background: gray;
-  color: white;
-  display: inline-block;
-  border-radius: 2em;
-  box-sizing: border-box;
-  padding: 1% 0 1% 0;
-  outline: none;
-}
-
-button:hover{
-  background-color: darkgray;
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .car-container{
-  width: 80%;
-  margin: 0 10% 0 10%;
+  height: 40%;
+  width: 100%;
+  padding: 32px 32px 32px 32px;
+
+  @media only screen and (max-width: 800px) {
+    height: auto;
+  }
 }
 
-.scroll-container{
+.explore-card-container {
+  flex: 1 1 auto;
+  display: grid;
+  width: calc(100% - 32px);
+  overflow-y: hidden;
+}
+
+.explore-card-container::after {
+  grid-area: 1 / 1 / 2 / 2;
+  box-shadow: inset 0 3px 7px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 7px 7px 0 0;
+  content: '';
+  z-index: 2;
+  pointer-events: none;
+}
+
+.explore-card {
+  grid-area: 1 / 1 / 2 / 2;
+  padding: 16px 16px 0 16px;
+  border-radius: 7px 7px 0 0;
+  background-color: #e8e4ea;
   overflow-y: scroll;
-  height: 350px;
+  transition: background-color 0.6s ease;
+  background-color: rgba(0,0,0,0);
+  -webkit-background-clip: text;
+
+  .explore-output{
+    transition: transform 10s ease;
+    animation: 1.5s ease 1s 1 showScrollability;
+
+    @keyframes showScrollability{
+      0% {
+        transform: translateY(0);
+      }
+      50%{
+        transform: translateY(-15px);
+      }
+      100%{
+        transform: translateY(0);
+      }
+    }
+
+    .explore-row{
+      margin-bottom: 16px;
+
+      .item{
+        padding: 16px;
+        z-index: 0;
+
+        .output-image{
+          width: 100%;
+          z-index: 0;
+        }
+      }
+    }
+  }
+}
+
+.explore-card:hover{
+  background-color: #465C69;
+}
+
+.explore-card::-webkit-scrollbar{
+  width: 9px;
+}
+
+.explore-card::-webkit-scrollbar-thumb{
+  background-color: inherit;
+  border-radius: 20px;
 }

@@ -1,9 +1,8 @@
-
 <div class="car-container">
-  <div class="outputImage">
-    <caria-ai-output></caria-ai-output>
-  </div>
-  <div class="scroll-container">
+  <caria-ai-output class="car-output"></caria-ai-output>
+</div>
+<div class="explore-card-container">
+  <div class="explore-card">
     <div
       infiniteScroll
       [infiniteScrollDistance]="2"
@@ -12,9 +11,11 @@
       [fromRoot]="true"
       (scrolled)="generateNewOutput()"
     >
-      <div *ngIf="(cars$ | async) as cars">
-        <div *ngFor="let car of cars; index as i">
-          <img [src]="car.url" alt="AI-Output image" (click)="setActive(i)" />
+      <div *ngIf="(cars$ | async) as cars" class="explore-output">
+        <div class="row explore-row">
+          <div class="item col-lg-4 col-sm-12" *ngFor="let car of cars; index as i">
+            <img [src]="car.url" alt="AI-Output image" (click)="setActive(i)" class="output-image"/>
+          </div>
         </div>
       </div>
     </div>
