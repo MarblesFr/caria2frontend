@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {RootState} from '../../services/root-state';
 import {ExploreActions, ExploreSelectors} from '../../services/explore-store';
+import {INITIAL_LOAD_AMOUNT} from '../../services/explore-store/explore.config';
 
 @Component({
   selector: 'caria-fullscreen-page',
@@ -19,7 +20,6 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   cars$ = this.store$.select(ExploreSelectors.getCars);
-  carsPerRow: 3;
 
   generateNewOutput() {
     this.store$.dispatch(ExploreActions.loadCars());
@@ -30,8 +30,6 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.generateNewOutput();
-    this.generateNewOutput();
-    this.generateNewOutput();
+    this.store$.dispatch(ExploreActions.loadNCars( { amount: INITIAL_LOAD_AMOUNT } ));
   }
 }
