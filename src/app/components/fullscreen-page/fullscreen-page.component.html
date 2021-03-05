@@ -13,7 +13,7 @@
     >
       <div *ngIf="(cars$ | async) as cars" class="explore-output">
         <div class="row explore-row">
-          <div class="item col-lg-4 col-sm-12" *ngFor="let car of cars; index as i">
+          <div class="item col-lg-4 col-md-6 col-sm-12" *ngFor="let car of cars; index as i">
             <img [src]="car.url" alt="AI-Output image" (click)="setActive(i)" class="output-image"/>
           </div>
         </div>
