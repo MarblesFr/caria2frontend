@@ -23,7 +23,7 @@ function toShownCarsState(cars: Car[], shadowLoaded: number): State {
     viewCars: cars.concat(Array.from({length: shadowLoaded}, () => {
       return {
         values: [],
-        url: '../../../assets/loading-icon.png'
+        url: 'assets/loading-car.png'
       };
     }))
   };
