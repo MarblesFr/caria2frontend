@@ -25,6 +25,10 @@ import {StoreModule} from '@ngrx/store';
 import {RootStoreModule} from './services/root-store.module';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {EffectsModule} from '@ngrx/effects';
+import { MAT_COLOR_FORMATS, NgxMatColorPickerModule, NGX_MAT_COLOR_FORMATS } from '@angular-material-components/color-picker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -56,8 +60,14 @@ import {EffectsModule} from '@ngrx/effects';
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
     RootStoreModule.forRoot(),
+    NgxMatColorPickerModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

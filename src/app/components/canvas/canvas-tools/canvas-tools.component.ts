@@ -3,6 +3,8 @@ import {CanvasService, Tool} from '../../../services/canvas-service/canvas.servi
 import {Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 import {convertFromActualSize} from '../../../util/caria.util';
+import {AbstractControl, FormControl} from '@angular/forms';
+import {ThemePalette} from '@angular/material/core';
 
 @Component({
   selector: 'caria-canvas-tools',
@@ -10,6 +12,11 @@ import {convertFromActualSize} from '../../../util/caria.util';
   styleUrls: ['./canvas-tools.component.scss']
 })
 export class CanvasToolsComponent implements OnInit, OnDestroy {
+
+  disabled = false;
+  touchUi = false;
+  public color: ThemePalette = 'primary';
+  colorCtr: AbstractControl = new FormControl(null);
 
   Tool = Tool;
 

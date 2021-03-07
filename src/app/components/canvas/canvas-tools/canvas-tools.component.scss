@@ -1,95 +1,172 @@
-.colors{
-  float: left;
-  width: 50%;
-  padding-right: 0;
-  padding-left: 3%;
-}
-
-.color{
-  float: left;
-  margin: 4% 5% 4% 5%;
-  padding: 12%;
-  width: 20%;
-}
-
-.color_picker{
-  width: 20%;
-  float: left;
-}
-
-.brush_slider{
-  float: left;
-  text-align: center;
-  margin: auto;
-  padding-left: 0;
-}
-
-mat-slider{
-  min-height: 15rem;
-}
-
-.allColors{
-  width: 50%;
-  height: 10%;
-}
-
-.slider-height{
+:host {
   height: 100%;
-}
-
-.reset_button{
-  float: left;
-}
-
-.update_button{
-  float: left;
-}
-
-.eraser{
-  float: left;
-}
-
-.picker{
-  float: left;
-}
-
-.pencil{
-  float: left;
-}
-
-button{
-  width: 50%;
-  height: 15%;
-  text-align: center;
-  transition: all 0.2s;
-  background: gray;
-  color: white;
-  display: inline-block;
-  border-radius: 2em;
-  box-sizing: border-box;
-  padding: 1% 0 1% 0;
-  outline: none;
-}
-
-button:hover:active{
-  background-color: darkgray;
-}
-
-.colorDesc{
-  float: left;
-  margin: 12% 1% 0 0;
-}
-
-.color_picker{
-  height: 100%;
-}
-
-.isActive{
-  background-color: darkgray;
-}
-
-.button-container{
   display: flex;
+  flex-direction: row;
   align-items: center;
+  align-content: center;
   justify-content: center;
 }
+
+.slider{
+  flex: 1;
+  order: 1;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+
+  input[type=range]{
+    flex: 1;
+    order: 2;
+    background: transparent;
+    -webkit-appearance: none;
+    -webkit-transform: rotate(-90deg);
+    margin:  0 0 0 0;
+    padding: 0;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 200px;
+    height: 8px;
+    background: #c6e0e6;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset -1px 1px 3px 0 rgba(0, 0, 0, 0.13);
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #85c3d2;
+    margin-top: -5px;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #c6e0e6;
+  }
+
+  p{
+    flex: 2;
+    order: 1;
+    margin: 0;
+  }
+}
+
+.color-picker{
+  flex: 2;
+  order: 2;
+}
+
+.canvas{
+  flex: 6;
+  order: 3;
+}
+
+.canvas-manipulation{
+  flex: 3;
+  order: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40%;
+
+  .cur-row{
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    margin-bottom: 10px;
+
+    .cur-col{
+      flex: 1;
+      z-index: 2;
+
+      .cur-button{
+        padding: 0 15px 0 15px;
+        font-size: 26px;
+        outline:none;
+        border: none;
+        color: black;
+        background: transparent;
+
+        .is-disabled{
+          opacity: 10%;
+        }
+      }
+
+      .cur-icon{
+        width: 32px;
+        height: auto;
+      }
+    }
+  }
+
+  .canvas-tools{
+    height: 100%;
+    width: 60%;
+
+    .tool-selector{
+      width: 100%;
+      height: 100%;
+
+      .tool-row{
+        display: flex;
+        flex-direction: row;
+        z-index: 2;
+        height: 50%;
+
+        .tool-col{
+          z-index: 2;
+          flex: 1;
+
+          .tool-button{
+            background: #cbd2e6;
+            border: transparent;
+            outline: none;
+            color: black;
+            width: 100%;
+            height: 100%;
+
+            .tool-icon{
+              width: 48px;
+              height: auto;
+              padding: 20px 0;
+            }
+          }
+
+          .is-active{
+            background: #ACB9D7;
+          }
+
+          .pencil-tool{
+            border-bottom: 1px solid #465c69;
+            border-top-right-radius: 12px;
+            border-top-left-radius: 12px;
+          }
+
+          .eraser-tool{
+            border-right: 1px solid #465c69;
+            border-bottom-left-radius: 12px;
+          }
+
+          .picker-tool{
+            border-bottom-right-radius: 12px;
+          }
+
+          .tool{
+            box-shadow: 0 3px 6.1px 0.9px rgba(0, 0, 0, 0.15);
+          }
+        }
+      }
+    }
+  }
+}
+
+
