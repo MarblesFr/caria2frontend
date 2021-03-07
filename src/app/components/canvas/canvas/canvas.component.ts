@@ -8,7 +8,7 @@ import {rgbToHex} from '../../../util/caria.util';
 @Component({
   selector: 'caria-canvas',
   template: '<canvas #canvas></canvas>',
-  styles: ['canvas { border: 1px solid #000; }']
+  styles: ['canvas { box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.15); display: flex;}']
 })
 
 export class CanvasComponent implements AfterViewInit, OnDestroy {

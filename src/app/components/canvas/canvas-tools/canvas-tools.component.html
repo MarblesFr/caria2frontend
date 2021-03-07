@@ -1,42 +1,71 @@
-<div class="row">
-  <div class="col color_picker">
+<div class="slider">
+  <p>{{(brushSize$ | async)}}</p>
+  <input #brushSize type="range" id="brush_slider" [min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (change)="updateSize(brushSize.valueAsNumber)" /><!--[min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (input)="updateSize($event.value)" -->
+</div>
+
+<div class="color-picker">
+  <mat-form-field>
+    <input matInput [ngxMatColorPicker]="picker" [formControl]="colorCtr" [disabled]="disabled" (colorChange)="updateColor(colorCtr.value)">
+    <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+    <ngx-mat-color-picker #picker [touchUi]="touchUi" [color]="color"></ngx-mat-color-picker>
+  </mat-form-field>
+  <!--
     <span [cpToggle]="true"
           [cpDialogDisplay]="'inline'"
           [cpCancelButton]="true"
           [(colorPicker)]="activeColor"
           (colorPickerChange)="updateColor($event)"></span>
-  </div>
-  <div class="col colors" *ngIf="(arrayColors$ | async) as colors">
-    <div class="row" *ngFor="let arrayColor of colors; index as i">
-      <p class="colorDesc">Color {{i+1}}:</p>
-      <div [style.background]="arrayColor" class="color"
-           (click)="changeActiveColorIndex(i)"></div>
-    </div>
-  </div>
-  <div class="col brush_slider">
-    <p class="brush_size">Brush size: {{(brushSize$ | async)}}</p>
-    <mat-slider class="slider-item slider-height" [min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (input)="updateSize($event.value)"
+</div>
+<mat-slider class="slider-item slider-height" [min]="0" [max]="1" step="0.01" [value]="convertFromActualSize(initialBrushValue)" (input)="updateSize($event.value)"
                 vertical>
-    </mat-slider>
+</mat-slider>
+    -->
+</div>
+<caria-canvas class="canvas"></caria-canvas>
+<div class="canvas-manipulation">
+  <div class="cur-row">
+    <div class="cur-col">
+      <button class="cur-button" (click)="clearCanvas()">
+        <img class="cur-icon" src="assets/clear-icon.png" alt="C">
+      </button>
+    </div>
+    <div class="cur-col" *ngVar="(canUndo$ | async) as canUndo">
+      <button class="cur-button" (click)="undoLastCanvasStep()" [disabled]="!canUndo">
+        <img class="cur-icon" src="assets/undo-icon.png" alt="C" [ngClass]="{'is-disabled': !canUndo}">
+      </button>
+    </div>
+    <div class="cur-col" *ngVar="(canRedo$ | async) as canRedo">
+      <button class="cur-button" (click)="redoLastCanvasStep()" [disabled]="!canRedo">
+        <img class="cur-icon" src="assets/redo-icon.png" alt="C" [ngClass]="{'is-disabled': !canRedo}">
+      </button>
+    </div>
   </div>
-  <div *ngVar="(activeTool$ | async) as activeTool" class="container row">
-    <div class="col reset_button button-container">
-      <button (click)="clearCanvas()">Clear</button>
-    </div>
-    <div class="col undo_button button-container" *ngVar="(canUndo$ | async) as canUndo">
-      <button (click)="undoLastCanvasStep()" [disabled]="!canUndo">Undo</button>
-    </div>
-    <div class="col redo_button button-container" *ngVar="(canRedo$ | async) as canRedo">
-      <button (click)="redoLastCanvasStep()" [disabled]="!canRedo">Redo</button>
-    </div>
-    <div class="col pencil button-container">
-      <button (click)="updateCurrentTool(Tool.PENCIL)" *ngVar="activeTool === Tool.PENCIL as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Pencil</button>
-    </div>
-    <div class="col eraser button-container">
-      <button (click)="updateCurrentTool(Tool.ERASER)" *ngVar="activeTool === Tool.ERASER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Eraser</button>
-    </div>
-    <div class="col picker button-container">
-      <button (click)="updateCurrentTool(Tool.PICKER)" *ngVar="activeTool === Tool.PICKER as isActive" [ngClass]="{'isActive': isActive}" [disabled]="isActive">Picker</button>
+  <div class="canvas-tools">
+    <div *ngVar="(activeTool$ | async) as activeTool" class="tool-selector">
+      <div class="tool-row">
+        <div class="tool-col">
+          <button class="tool-button pencil-tool tool" (click)="updateCurrentTool(Tool.PENCIL)" *ngVar="activeTool === Tool.PENCIL as isActive"
+                  [ngClass]="{'is-active': isActive}" [disabled]="isActive">
+            <img src="assets/pencil-icon.png" class="tool-icon" alt="Pencil" />
+          </button>
+        </div>
+      </div>
+      <div class="tool-row">
+        <div class="tool-col">
+          <button class="tool-button eraser-tool tool" (click)="updateCurrentTool(Tool.ERASER)" *ngVar="activeTool === Tool.ERASER as isActive"
+                  [ngClass]="{'is-active': isActive}" [disabled]="isActive">
+            <img src="assets/eraser-icon.png" class="tool-icon" alt="Eraser" />
+          </button>
+        </div>
+        <div class="tool-col">
+          <button class="tool-button picker-tool tool" (click)="updateCurrentTool(Tool.PICKER)" *ngVar="activeTool === Tool.PICKER as isActive"
+                  [ngClass]="{'is-active': isActive}" [disabled]="isActive">
+            <img src="assets/picker-icon.png" class="tool-icon" alt="Picker" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+
