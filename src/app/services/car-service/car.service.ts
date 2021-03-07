@@ -6,7 +6,7 @@ import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {randomValues} from '../../util/caria.util';
-import {BASE_URL} from './car.config';
+import {BASE_URL, IMAGE_HEIGHT, IMAGE_WIDTH} from './car.config';
 import {Car} from '../../models';
 
 @Injectable({
@@ -49,7 +49,7 @@ export class CarService {
 
   updateValuesFromImage(image: Blob) {
     const imageFile = new File([image], 'image.png', {type: 'image/png', lastModified: Date.now()});
-    this.ng2ImgMax.resizeImage(imageFile, 192, 64)
+    this.ng2ImgMax.resizeImage(imageFile, IMAGE_WIDTH, IMAGE_HEIGHT)
       .pipe(
         switchMap(scaledImage => {
           const formData = new FormData();
