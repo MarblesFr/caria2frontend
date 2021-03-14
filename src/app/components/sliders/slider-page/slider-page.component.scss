@@ -1,11 +1,46 @@
-.outputWindow{
-  background-color: transparent;
-  margin: 5% 0 5% 0;
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.sliderWindow{
-  background-color: #C0C0C0;
-  margin: 0 3% 0 3%;
-  height: 45%;
-  padding: 2% 0 0 0;
+.car-container{
+  height: 40%;
+  width: 100%;
+  padding: 32px 32px 32px 32px;
+
+  @media only screen and (max-width: 800px) {
+    height: auto;
+  }
+}
+
+.dark-card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 32px);
+  box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18);
+  background-color: #eeeaf0;
+
+  .slider-card{
+    border-radius: 7px;
+    width: 90%;
+    height: 60%;
+    margin-left: 5%;
+    margin-top: 5%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    box-shadow: inset 0 3px 7px 0 rgba(0, 0, 0, 0.19);
+    background: #f7f3f9;
+    align-items: center;
+    display: flex;
+  }
+
+  #scroll-slider {
+    margin-top: 2%;
+    margin-left: 5%;
+    width: 90%;
+    -webkit-transform: none;
+  }
 }

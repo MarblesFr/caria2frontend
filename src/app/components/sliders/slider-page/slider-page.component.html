@@ -1,11 +1,12 @@
- <div class="container">
-    <!-- ai-output -->
-    <div class="outputWindow">
-      <caria-ai-output></caria-ai-output>
-    </div>
+<div class="car-container">
+  <caria-ai-output class="car-output"></caria-ai-output>
+</div>
+<div class="dark-card">
+  <div id="slider-card" class="slider-card">
+    <caria-slider-window></caria-slider-window>
   </div>
-  <!-- sliders -->
-  <div class="sliderWindow">
-    <caria-slider-window class="p-4"></caria-slider-window>
+  <div id="scroll-slider-container">
+    <input #scrollPercentage type="range" id="scroll-slider" [min]="0" [max]="100" [value]="0" step="0.01" (input)="changeSliderValue(scrollPercentage.valueAsNumber)"/>
   </div>
+</div>
 
