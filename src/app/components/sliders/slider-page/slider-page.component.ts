@@ -17,7 +17,7 @@ export class SliderPageComponent implements OnInit {
   changeSliderValue(valueAsNumber: number) {
     const el = document.getElementById('slider-card');
     let scrollLeftPx;
-    scrollLeftPx = el.offsetWidth / 90 * valueAsNumber;
+    scrollLeftPx = 65 * valueAsNumber;
     el.scrollLeft = scrollLeftPx;
   }
 }
