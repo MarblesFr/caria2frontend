@@ -36,6 +36,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   public currentTool = Tool.PENCIL;
   public currentImage: Blob;
 
+  private startIndex: number;
+  private currentIndex: number;
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     const newWidth = window.innerWidth / this.downscaleWidthFactor;
@@ -83,6 +86,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
       take(1)
     ).subscribe(
       index => {
+        this.startIndex = index;
         if (index < 0) {
           this.saveCurrentCanvasState();
         }
@@ -90,6 +94,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     );
 
     this.canvasService.clearCanvas.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.clearCanvas());
+    this.canvasService.currentStep$.pipe(takeUntil(this.unsubscribe$)).subscribe((index) => this.currentIndex = index);
     this.canvasService.activeColor$.pipe(takeUntil(this.unsubscribe$)).subscribe((color) => this.changeColor(color));
     this.canvasService.size$.pipe(takeUntil(this.unsubscribe$)).subscribe((size) => this.changeBrushSize(size));
     this.canvasService.activeImage$.pipe(takeUntil(this.unsubscribe$)).subscribe((image) => this.updateImage(image));
@@ -200,9 +205,11 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   public updateOutput() {
-    this.canvaselement.toBlob(blob => {
-      this.cariaService.updateValuesFromImage(blob);
-    });
+    if (this.currentIndex !== this.startIndex && this.startIndex !== -1) {
+      this.canvaselement.toBlob(blob => {
+        this.cariaService.updateValuesFromImage(blob);
+      });
+    }
   }
 
   public saveCurrentCanvasState() {
