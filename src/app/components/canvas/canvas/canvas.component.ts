@@ -205,7 +205,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   public updateOutput() {
-    if (this.currentIndex !== this.startIndex && this.startIndex !== -1) {
+    if (this.currentIndex !== this.startIndex && this.currentIndex > 0) {
       this.canvaselement.toBlob(blob => {
         this.cariaService.updateValuesFromImage(blob);
       });
