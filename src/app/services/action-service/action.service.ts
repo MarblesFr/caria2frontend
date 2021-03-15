@@ -10,8 +10,8 @@ import {CanvasService} from '../canvas-service/canvas.service';
 export enum Action {
   EXPORTIMG = 'Export Image',
   IMPORTIMG = 'Import Image',
-  EXPORTSLIDERS = 'Export Sliders',
-  IMPORTSLIDERS = 'Import Sliders',
+  EXPORTSLIDERS = 'Export Values',
+  IMPORTSLIDERS = 'Import Values',
   EXPORTCANVAS = 'Export Canvas',
   IMPORTCANVAS = 'Import Canvas',
   OUTPUT2CANVAS = 'Edit Output'
