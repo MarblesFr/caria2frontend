@@ -42,6 +42,13 @@ export class ExploreEffects {
     )
   );
 
+  loadCarsFailed$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadCarsFailed),
+      map(() => loadCars())
+    )
+  );
+
   loadNCars$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadNCars),
@@ -52,6 +59,13 @@ export class ExploreEffects {
           catchError(() => of(loadNCarsFailed({ amount: values.length })))
         )
       )
+    )
+  );
+
+  loadNCarsFailed$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadNCarsFailed),
+      map((params) => loadNCars(params))
     )
   );
 

@@ -9,8 +9,6 @@ import {Page} from '../../app-routing.module';
 })
 export class NavbarComponent implements OnInit {
 
-  navbarOpen = false;
-
   items: NavbarItem[] = [
     { link: Page.EXPLORE, label: 'Explore' },
     { link: Page.SLIDER, label: 'Sliders' },
@@ -18,10 +16,6 @@ export class NavbarComponent implements OnInit {
   ];
 
   constructor() { }
-
-  toggleNavbar(): void {
-    this.navbarOpen = !this.navbarOpen;
-  }
 
   ngOnInit(): void {
   }

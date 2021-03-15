@@ -1,12 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-light darkerwhite">
-  <a class="navbar-brand cariaLogoContainer" routerLink="">
-    <img src="assets/caria-logo-black.png" class="cariaLogo" alt="CarIA logo"/>
+<div class="navbar navbar-expand navbar-light">
+  <a class="navbar-brand caria-logo-container" routerLink="">
+    <img src="assets/caria-logo-black.png" class="caria-logo" alt="CarIA logo"/>
   </a>
-  <button class="navbar-toggler" type="button" (click)="toggleNavbar()" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
-  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
+  <div class="navbar-collapse">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" *ngFor="let item of items">
         <a class="nav-link" [routerLink]="item.link" routerLinkActive="active">{{ item.label }}</a>
@@ -14,4 +11,4 @@
     </ul>
     <caria-action-button class="caria-dropdown"></caria-action-button>
   </div>
-</nav>
+</div>

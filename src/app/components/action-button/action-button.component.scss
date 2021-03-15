@@ -1,1 +1,16 @@
+.btn {
+  font-size: 23px;
+  box-shadow: none;
+  color: #1f2333;
+  transition: color 0s;
+}
 
+.show {
+  .btn {
+    color: #487a97;
+  }
+
+  .btn::after{
+    transform: rotate(180deg);
+  }
+}
