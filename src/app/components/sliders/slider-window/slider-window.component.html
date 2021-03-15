@@ -1,11 +1,9 @@
 <div class="container p-4 align-middle align-fix" *ngIf="values$ | async as values">
-  <div class="d-flex justify-content-center move-sliders" *ngVar="(SLIDER_COUNT) as perPageCount">
+  <div class="d-flex move-sliders" *ngVar="(SLIDER_COUNT) as perPageCount">
     <div class="slider-item-container" *ngFor="let value of [].constructor(perPageCount); index as i">
       <div *ngVar="perPageCount * currentPage + i as index" class="text-center">
         <input #slider type="range" [min]="-VALUE_RANGE" [max]="VALUE_RANGE" step="0.1" [value]="values[index]" (input)="updateSlider(index, slider.valueAsNumber)"/>
       </div>
     </div>
-  </div>
-  <div class="d-flex justify-content-center align-bottom p-2">
   </div>
 </div>
