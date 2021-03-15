@@ -2,27 +2,73 @@
   width: 100%;
 }
 
-.cariaLogo{
-  width: 100%;
-  margin: 0 1% 0 5%;
-}
-
-.cariaLogoContainer{
-  width: 6%;
-  margin-right: 3%;
-}
-
-li{
-  margin-right: 15%;
-  font-size: 120%;
-}
-
-.darkerwhite{
+.navbar{
   background-color: #faf7fc;
   box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.06);
-  height: 7%;
-}
+  height: 66px;
+  padding: 0;
 
-.caria-dropdown{
-  margin-right: 3%;
+  .caria-logo-container{
+    margin-left: 30px;
+    height: 45px;
+
+    .caria-logo{
+      height: 100%;
+    }
+  }
+
+  .navbar-collapse{
+    height: 100%;
+
+    .navbar-nav{
+      height: 100%;
+      margin-left: 30px;
+
+      @media only screen and (max-width: 510px) {
+        margin-left: 20px;
+      }
+
+      li{
+        margin-right: 40px;
+        font-size: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @media only screen and (max-width: 510px) {
+          margin-right: 20px;
+        }
+
+        @media only screen and (max-width: 450px) {
+          font-size: 20px;
+        }
+
+        a{
+          height: 100%;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          color: #1f2333;
+        }
+
+        a:hover{
+          color: #487a97;
+        }
+
+        .active{
+          color: #487a97;
+          border-bottom: 3px solid #487a97;
+          padding-top: 3px;
+        }
+      }
+    }
+
+    .caria-dropdown{
+      margin-right: 66px;
+
+      @media only screen and (max-width: 630px) {
+        display: none;
+      }
+    }
+  }
 }
