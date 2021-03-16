@@ -10,10 +10,10 @@ import {
   setAsActive,
   setAsActiveFailed,
   setAsActiveSuccess,
-  loadNCars,
-  loadNCarsSuccess, loadNCarsFailed
+  loadInitialCars,
+  loadInitialCarsSuccess, loadInitialCarsFailed
 } from './explore.actions';
-import {catchError, concatMap, first, map, tap} from 'rxjs/operators';
+import {catchError, concatMap, first, map, tap, withLatestFrom} from 'rxjs/operators';
 import {ADD_AMOUNT} from './explore.config';
 import {randomValues} from '../../util/caria.util';
 import {Car} from '../../models';
@@ -49,23 +49,24 @@ export class ExploreEffects {
     )
   );
 
-  loadNCars$ = createEffect(() =>
+  loadInitialCars$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadNCars),
-      map((params) => Array.from({length: params.amount}, () => randomValues())),
+      ofType(loadInitialCars),
+      withLatestFrom(this.carService.values$),
+      map(([params, values]) => [values].concat(Array.from({length: params.amount - 1}, () => randomValues()))),
       concatMap((values) =>
         this.carService.multipleValuesToCars(values).pipe(
-          map((cars) => loadNCarsSuccess({ cars })),
-          catchError(() => of(loadNCarsFailed({ amount: values.length })))
+          map((cars) => loadInitialCarsSuccess({ cars })),
+          catchError(() => of(loadInitialCarsFailed({ amount: values.length })))
         )
       )
     )
   );
 
-  loadNCarsFailed$ = createEffect(() =>
+  loadInitialCarsFailed$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadNCarsFailed),
-      map((params) => loadNCars(params))
+      ofType(loadInitialCarsFailed),
+      map((params) => loadInitialCars(params))
     )
   );
 
