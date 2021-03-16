@@ -30,6 +30,6 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.store$.dispatch(ExploreActions.loadNCars( { amount: INITIAL_LOAD_AMOUNT } ));
+    this.store$.dispatch(ExploreActions.loadInitialCars( { amount: INITIAL_LOAD_AMOUNT } ));
   }
 }

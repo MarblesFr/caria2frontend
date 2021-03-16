@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, switchMap} from 'rxjs/operators';
+import {map, retry, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
@@ -26,7 +26,7 @@ export class CarService {
 
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
-    switchMap(values => this.valuesToBlob(values)),
+    switchMap(values => this.valuesToBlob(values).pipe(retry())),
   );
 
   currentOutput$ = this.currentOutputBlob$.pipe(
@@ -41,10 +41,6 @@ export class CarService {
     const values = this._values$.value;
     values[index] = value;
     this.updateValues(values);
-  }
-
-  randomizeValues() {
-    this.updateValues(randomValues());
   }
 
   updateValuesFromImage(image: Blob) {
