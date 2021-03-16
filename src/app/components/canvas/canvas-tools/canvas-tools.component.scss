@@ -13,17 +13,30 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
 
   p{
     flex: 2;
     order: 1;
-    margin: 0;
+    margin: 0 0 0 45px;
+    align-self: flex-start;
+    transform: translateY(8px);
+  }
+
+  input{
+    order: 2;
+  }
+
+  p::after{
+    margin-left: 20px;
   }
 }
 
 .color-picker{
   flex: 2;
   order: 2;
+
 }
 
 .canvas{
