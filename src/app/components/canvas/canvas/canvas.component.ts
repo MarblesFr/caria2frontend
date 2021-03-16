@@ -39,6 +39,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
   private startIndex: number;
   private currentIndex: number;
 
+  private mouseDown: boolean;
+  private drawnDot: boolean;
+  private drawnDotPos: { x: number, y: number };
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     const newWidth = window.innerWidth / this.downscaleWidthFactor;
@@ -129,14 +133,29 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         {
           this.cx.strokeStyle = '#FFF';
           this.drawOnCanvas(prevPos, currentPos);
+          if (this.drawnDot){
+            this.drawOnCanvas(this.drawnDotPos, prevPos);
+            this.drawnDot = false;
+          }
         }
         else if (this.currentTool === Tool.PENCIL){
           this.cx.strokeStyle = this.activeColor;
           this.drawOnCanvas(prevPos, currentPos);
+          if (this.drawnDot){
+            this.drawOnCanvas(this.drawnDotPos, prevPos);
+            this.drawnDot = false;
+          }
         }
       });
     fromEvent(canvasEl, 'mouseup').subscribe(() => {
       this.saveCurrentCanvasState();
+      this.mouseDown = false;
+    });
+    fromEvent(canvasEl, 'mouseleave').subscribe(() => {
+      if (this.mouseDown){
+        this.saveCurrentCanvasState();
+        this.mouseDown = false;
+      }
     });
     fromEvent(canvasEl, 'mousedown').subscribe((res: MouseEvent) => {
       const rect = canvasEl.getBoundingClientRect();
@@ -148,10 +167,16 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
       {
         this.cx.strokeStyle = '#FFF';
         this.drawPointOnCanvas(position);
+        this.drawnDot = true;
+        this.drawnDotPos = position;
+        this.mouseDown = true;
       }
       else if (this.currentTool === Tool.PENCIL){
         this.cx.strokeStyle = this.activeColor;
         this.drawPointOnCanvas(position);
+        this.drawnDot = true;
+        this.drawnDotPos = position;
+        this.mouseDown = true;
       }
       else if (this.currentTool === Tool.PICKER) {
         const pixel = this.cx.getImageData(position.x, position.y, 1, 1);
