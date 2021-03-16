@@ -111,7 +111,7 @@ export class ActionService {
 
   outputToCanvas() {
     this.cariaService.currentOutputBlob$.pipe(first())
-      .subscribe(image => this.canvasService.updateImage(image));
+      .subscribe(blob => this.canvasService.updateImage(blob));
   }
 
   exportCanvas() {
@@ -122,9 +122,7 @@ export class ActionService {
     const input = document.createElement('input');
     input.type = 'file';
 
-    input.onchange = () => {
-      this.canvasService.updateImage(input.files[0]);
-    };
+    input.onchange = () => this.canvasService.updateImage(input.files[0]);
 
     input.click();
   }

@@ -218,8 +218,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  public updateImage(imageData: Blob) {
-    this.currentImage = imageData;
+  public updateImage(image: Blob) {
+    this.currentImage = image;
     this.setImageToCanvas();
     this.updateOutput();
   }
