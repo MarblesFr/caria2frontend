@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {CanvasService, Tool} from '../../../services/canvas-service/canvas.service';
 import {Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
@@ -22,8 +22,8 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
 
   activeTool$: Observable<Tool>;
 
-  canUndo$: Observable<boolean>;
-  canRedo$: Observable<boolean>;
+  canUndo: boolean;
+  canRedo: boolean;
 
   selectedColorIndex$: Observable<number>;
 
@@ -37,11 +37,17 @@ export class CanvasToolsComponent implements OnInit, OnDestroy {
 
   private readonly unsubscribe$ = new Subject<void>();
 
-  constructor(private canvasService: CanvasService) { }
+  constructor(private canvasService: CanvasService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.canUndo$ = this.canvasService.canUndo$;
-    this.canRedo$ = this.canvasService.canRedo$;
+    this.canvasService.canUndo$.pipe(takeUntil(this.unsubscribe$)).subscribe(value => {
+      this.canUndo = value;
+      this.changeDetectorRef.detectChanges();
+    });
+    this.canvasService.canRedo$.pipe(takeUntil(this.unsubscribe$)).subscribe(value => {
+      this.canRedo = value;
+      this.changeDetectorRef.detectChanges();
+    });
     this.activeTool$ = this.canvasService.activeTool$;
     this.brushSize$ = this.canvasService.size$.pipe(map(value => Math.round(value)));
     this.arrayColors$ = this.canvasService.colors$;

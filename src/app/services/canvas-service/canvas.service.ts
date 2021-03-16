@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {convertToActualSize} from '../../util/caria.util';
 import {BehaviorSubject, combineLatest} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, withLatestFrom} from 'rxjs/operators';
 import {filterUndefined} from '../../util/FilterUndefined';
 
 export enum Tool{
@@ -24,8 +24,9 @@ export class CanvasService {
   private _currentStep$ = new BehaviorSubject<number>(-1);
   currentStep$ = this._currentStep$.asObservable();
 
-  activeImage$ = combineLatest([this.allImages$, this.currentStep$]).pipe(
-    map(value => value[0][value[1]]),
+  activeImage$ = this.currentStep$.pipe(
+    withLatestFrom(this.allImages$),
+    map(([step, images]) => images[step]),
     filterUndefined()
   );
 
@@ -65,8 +66,8 @@ export class CanvasService {
     const currentStep = this._currentStep$.value;
     images = images.slice(0, currentStep + 1);
     images.push(image);
-    this._currentStep$.next(currentStep + 1);
     this._allImages$.next(images);
+    this._currentStep$.next(currentStep + 1);
   }
 
   undoImage() {

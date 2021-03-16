@@ -29,12 +29,12 @@
         <img class="cur-icon" src="assets/clear-icon.png" alt="C">
       </button>
     </div>
-    <div class="cur-col" *ngVar="(canUndo$ | async) as canUndo">
+    <div class="cur-col">
       <button class="cur-button" (click)="undoLastCanvasStep()" [disabled]="!canUndo">
         <img class="cur-icon" src="assets/undo-icon.png" alt="C" [ngClass]="{'is-disabled': !canUndo}">
       </button>
     </div>
-    <div class="cur-col" *ngVar="(canRedo$ | async) as canRedo">
+    <div class="cur-col">
       <button class="cur-button" (click)="redoLastCanvasStep()" [disabled]="!canRedo">
         <img class="cur-icon" src="assets/redo-icon.png" alt="C" [ngClass]="{'is-disabled': !canRedo}">
       </button>
