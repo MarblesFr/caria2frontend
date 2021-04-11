@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, retry, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
@@ -50,7 +50,7 @@ export class CarService {
         switchMap(scaledImage => {
           const formData = new FormData();
           formData.append('image', scaledImage);
-          return this.http.post<number[]>(BASE_URL + '/canvas', formData);
+          return this.http.post<number[]>(BASE_URL + '/canvas', formData, {headers: new HttpHeaders({ timeout: '20000' })});
         })
       ).subscribe(
         values => this.updateValues(values)
@@ -69,11 +69,13 @@ export class CarService {
   }
 
   valuesToBlob(values: number[]) {
-    return this.http.get(BASE_URL + '/get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+    return this.http.get(BASE_URL + '/get',
+      {params: {values: JSON.stringify(values)}, responseType: 'blob', headers: new HttpHeaders({ timeout: '20000' })});
   }
 
   multipleValuesToUrls(values: number[][]) {
-    return this.http.get(BASE_URL + '/getMultiple', {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
+    return this.http.get(BASE_URL + '/getMultiple',
+      {params: {values: JSON.stringify(values)}, responseType: 'json', headers: new HttpHeaders({ timeout: '20000' })}).pipe(
       map((value: string[]) =>
         value.map(imageValues => {
           return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;
