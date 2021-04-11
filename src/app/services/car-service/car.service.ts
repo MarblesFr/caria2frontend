@@ -50,7 +50,7 @@ export class CarService {
         switchMap(scaledImage => {
           const formData = new FormData();
           formData.append('image', scaledImage);
-          return this.http.post<number[]>(BASE_URL + 'canvas', formData);
+          return this.http.post<number[]>(BASE_URL + '/canvas', formData);
         })
       ).subscribe(
         values => this.updateValues(values)
@@ -69,11 +69,11 @@ export class CarService {
   }
 
   valuesToBlob(values: number[]) {
-    return this.http.get(BASE_URL + 'get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
+    return this.http.get(BASE_URL + '/get', {params: {values: JSON.stringify(values)}, responseType: 'blob'});
   }
 
   multipleValuesToUrls(values: number[][]) {
-    return this.http.get(BASE_URL + 'getMultiple', {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
+    return this.http.get(BASE_URL + '/getMultiple', {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
       map((value: string[]) =>
         value.map(imageValues => {
           return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;
