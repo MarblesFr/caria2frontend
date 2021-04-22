@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, retry, switchMap, timeout} from 'rxjs/operators';
+import {delay, map, retry, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
@@ -26,7 +26,11 @@ export class CarService {
 
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
-    switchMap(values => this.valuesToBlob(values).pipe(retry())),
+    switchMap(values => this.valuesToBlob(values).pipe(
+      retry(),
+      delay(5000)
+      )
+    ),
   );
 
   currentOutput$ = this.currentOutputBlob$.pipe(
@@ -50,7 +54,7 @@ export class CarService {
         switchMap(scaledImage => {
           const formData = new FormData();
           formData.append('image', scaledImage);
-          return this.http.post<number[]>(BASE_URL + '/canvas', formData).pipe(timeout(5000));
+          return this.http.post<number[]>(BASE_URL + '/canvas', formData);
         })
       ).subscribe(
         values => this.updateValues(values)
@@ -70,13 +74,12 @@ export class CarService {
 
   valuesToBlob(values: number[]) {
     return this.http.get(BASE_URL + '/get',
-      {params: {values: JSON.stringify(values)}, responseType: 'blob'}).pipe(timeout(5000));
+      {params: {values: JSON.stringify(values)}, responseType: 'blob'});
   }
 
   multipleValuesToUrls(values: number[][]) {
     return this.http.get(BASE_URL + '/getMultiple',
       {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
-        timeout(5000),
         map((value: string[]) =>
           value.map(imageValues => {
             return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;

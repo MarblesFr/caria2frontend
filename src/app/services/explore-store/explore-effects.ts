@@ -13,7 +13,7 @@ import {
   loadInitialCars,
   loadInitialCarsSuccess, loadInitialCarsFailed
 } from './explore.actions';
-import {catchError, concatMap, first, map, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, concatMap, delay, first, map, tap, withLatestFrom} from 'rxjs/operators';
 import {ADD_AMOUNT} from './explore.config';
 import {randomValues} from '../../util/caria.util';
 import {Car} from '../../models';
@@ -45,6 +45,7 @@ export class ExploreEffects {
   loadCarsFailed$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadCarsFailed),
+      delay(5000),
       map(() => loadCars())
     )
   );
@@ -66,6 +67,7 @@ export class ExploreEffects {
   loadInitialCarsFailed$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadInitialCarsFailed),
+      delay(5000),
       map((params) => loadInitialCars(params))
     )
   );
