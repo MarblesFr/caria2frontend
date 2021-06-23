@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {delay, map, retry, switchMap} from 'rxjs/operators';
+import {concatMap, delay, map, reduce, retry, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, from, Observable} from 'rxjs';
 import {randomValues} from '../../util/caria.util';
 import {BASE_URL, IMAGE_HEIGHT, IMAGE_WIDTH} from './car.config';
 import {Car} from '../../models';
@@ -78,13 +78,23 @@ export class CarService {
   }
 
   multipleValuesToUrls(values: number[][]) {
-    return this.http.get(BASE_URL + '/getMultiple',
-      {params: {values: JSON.stringify(values)}, responseType: 'json'}).pipe(
-        map((value: string[]) =>
-          value.map(imageValues => {
-            return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;
-          })
-        )
+    const requestValues: number[][][] = [];
+    for (let i = 0; i < values.length; i++) {
+      const arrayIndex = Math.ceil((i + 1) / 3) - 1;
+      if (requestValues[arrayIndex] === undefined){
+        requestValues[arrayIndex] = [];
+      }
+      requestValues[arrayIndex].push(values[i]);
+    }
+    return from(requestValues).pipe(
+      concatMap(valueSet => this.http.get(BASE_URL + '/getMultiple',
+        {params: {values: JSON.stringify(valueSet)}, responseType: 'json'})),
+      reduce((valueA: string[], valueB: string[]) => valueA.concat(valueB)),
+      map((value: string[]) =>
+        value.map(imageValues => {
+          return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;
+        })
+      )
     );
   }
 
