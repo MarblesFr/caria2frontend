@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {concatMap, delay, map, reduce, retry, switchMap} from 'rxjs/operators';
+import {concatMap, delay, map, retry, retryWhen, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
@@ -27,8 +27,7 @@ export class CarService {
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
     switchMap(values => this.valuesToBlob(values).pipe(
-      retry(),
-      delay(5000)
+      retryWhen(errors => errors.pipe(delay(5000)))
       )
     ),
   );
@@ -63,12 +62,16 @@ export class CarService {
 
   multipleValuesToCars(values: number[][]): Observable<Car[]> {
     return this.multipleValuesToUrls(values).pipe(
-      map(urls => values.map((value, index) => {
-        return {
-          values: value,
-          url: urls[index]
-        };
-      }))
+      map(urls => {
+        const mapped = [];
+        for (const item of urls) {
+          mapped.push({
+            values: values.shift(),
+            url: item
+          });
+        }
+        return mapped;
+      })
     );
   }
 
@@ -89,7 +92,6 @@ export class CarService {
     return from(requestValues).pipe(
       concatMap(valueSet => this.http.get(BASE_URL + '/getMultiple',
         {params: {values: JSON.stringify(valueSet)}, responseType: 'json'})),
-      reduce((valueA: string[], valueB: string[]) => valueA.concat(valueB)),
       map((value: string[]) =>
         value.map(imageValues => {
           return this.sanitizer.bypassSecurityTrustUrl('data:image/jpg;base64, ' + imageValues) as string;

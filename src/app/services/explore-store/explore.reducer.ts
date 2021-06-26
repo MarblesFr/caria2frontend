@@ -12,7 +12,7 @@ const exploreReducer = createReducer(
   on(loadCarsSuccess, (state: State, action) => {
     let cars = state.cars.slice();
     cars = cars.concat(action.cars);
-    return toShownCarsState(cars, state.shadowLoaded - ADD_AMOUNT);
+    return toShownCarsState(cars, state.shadowLoaded - action.cars.length);
   }),
   on(loadCarsFailed, (state: State) => {
     return toShownCarsState(state.cars, state.shadowLoaded - ADD_AMOUNT);
@@ -22,7 +22,7 @@ const exploreReducer = createReducer(
   }),
   on(loadInitialCarsSuccess, (state: State, action) => {
     let cars = state.cars.slice();
-    cars = action.cars.concat(cars);
+    cars = cars.concat(action.cars);
     return toShownCarsState(cars, state.shadowLoaded - action.cars.length);
   }),
   on(loadInitialCarsFailed, (state: State, action) => {
