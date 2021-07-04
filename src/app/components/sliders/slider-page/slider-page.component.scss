@@ -43,4 +43,9 @@
     width: 90%;
     -webkit-transform: none;
   }
+
+  #scroll-slider::-moz-range-track {
+    width: 100%;
+  }
+
 }
