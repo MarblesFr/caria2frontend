@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {concatMap, delay, map, retry, retryWhen, switchMap} from 'rxjs/operators';
+import {concatMap, debounceTime, delay, map, retryWhen, switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {filterUndefined} from '../../util/FilterUndefined';
 import {Ng2ImgMaxService} from 'ng2-img-max';
@@ -8,6 +8,7 @@ import {BehaviorSubject, from, Observable} from 'rxjs';
 import {randomValues} from '../../util/caria.util';
 import {BASE_URL, IMAGE_HEIGHT, IMAGE_WIDTH} from './car.config';
 import {Car} from '../../models';
+import {MAX_LOAD_AMOUNT} from '../explore-store/explore.config';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class CarService {
 
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
+    debounceTime(50),
     switchMap(values => this.valuesToBlob(values).pipe(
       retryWhen(errors => errors.pipe(delay(5000)))
       )
@@ -83,7 +85,7 @@ export class CarService {
   multipleValuesToUrls(values: number[][]) {
     const requestValues: number[][][] = [];
     for (let i = 0; i < values.length; i++) {
-      const arrayIndex = Math.ceil((i + 1) / 3) - 1;
+      const arrayIndex = Math.ceil((i + 1) / MAX_LOAD_AMOUNT) - 1;
       if (requestValues[arrayIndex] === undefined){
         requestValues[arrayIndex] = [];
       }
