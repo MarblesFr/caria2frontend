@@ -35,7 +35,7 @@
         <div class="tool-col">
           <button class="tool-button pencil-tool tool" (click)="updateCurrentTool(Tool.PENCIL)" *ngVar="activeTool === Tool.PENCIL as isActive"
                   [ngClass]="{'is-active': isActive}" [disabled]="isActive">
-            <img src="assets/pencil-icon.png" class="tool-icon" alt="Pencil" />
+            <img src="../../../../assets/pencil-icon.svg" class="tool-icon" alt="Pencil" />
           </button>
         </div>
       </div>
@@ -43,13 +43,13 @@
         <div class="tool-col">
           <button class="tool-button eraser-tool tool" (click)="updateCurrentTool(Tool.ERASER)" *ngVar="activeTool === Tool.ERASER as isActive"
                   [ngClass]="{'is-active': isActive}" [disabled]="isActive">
-            <img src="assets/eraser-icon.png" class="tool-icon" alt="Eraser" />
+            <img src="../../../../assets/eraser-icon.svg" class="tool-icon" alt="Eraser" />
           </button>
         </div>
         <div class="tool-col">
           <button class="tool-button picker-tool tool" (click)="updateCurrentTool(Tool.PICKER)" *ngVar="activeTool === Tool.PICKER as isActive"
                   [ngClass]="{'is-active': isActive}" [disabled]="isActive">
-            <img src="assets/picker-icon.png" class="tool-icon" alt="Picker" />
+            <img src="../../../../assets/picker-icon.svg" class="tool-icon" alt="Picker" />
           </button>
         </div>
       </div>
