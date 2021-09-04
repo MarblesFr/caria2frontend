@@ -1,6 +1,14 @@
 import {createReducer, on} from '@ngrx/store';
 import {initialState, State} from './explore.state';
-import {loadCars, loadCarsFailed, loadCarsSuccess, loadInitialCars, loadInitialCarsFailed, loadInitialCarsSuccess} from './explore.actions';
+import {
+  loadCars,
+  loadCarsFailed,
+  loadCarsSuccess,
+  loadCurrentSuccess,
+  loadInitialCars,
+  loadInitialCarsFailed,
+  loadInitialCarsSuccess
+} from './explore.actions';
 import {ADD_AMOUNT, MAX_LOAD_AMOUNT} from './explore.config';
 import {Car} from '../../models';
 
@@ -19,6 +27,11 @@ const exploreReducer = createReducer(
   }),
   on(loadInitialCars, (state: State, action) => {
     return toShownCarsState(state.cars, state.shadowLoaded + action.amount);
+  }),
+  on(loadCurrentSuccess, (state: State, action) => {
+    let cars = state.cars.slice(1);
+    cars = [action.car].concat(cars);
+    return toShownCarsState(cars, state.shadowLoaded);
   }),
   on(loadInitialCarsSuccess, (state: State, action) => {
     let cars = state.cars.slice();
