@@ -72,7 +72,8 @@ export class ExploreEffects {
     this.actions$.pipe(
       ofType(loadCurrentCar),
       withLatestFrom(this.carService.values$, this.carService.currentOutput$),
-      map(([, values, url]) => loadCurrentSuccess({ car: {values, url}}))
+      map(([, values, url]) => loadCurrentSuccess({ car: {values, url}})),
+      tap(() => this.carService.setActive(0))
     )
   );
 
@@ -106,7 +107,7 @@ export class ExploreEffects {
           first(),
           tap((car: Car) => {
             this.carService.updateValues(car.values.slice());
-            this.carService.addBorder(params.index);
+            this.carService.setActive(params.index);
           }),
           map(() => setAsActiveSuccess()),
           catchError(() => of(setAsActiveFailed()))

@@ -23,7 +23,7 @@ export class FullscreenPageComponent implements OnInit{
   }
 
   cars$ = this.store$.select(ExploreSelectors.getCars);
-  activeCar: number;
+  activeCar$ = this.carService.activeCar$;
 
   generateNewOutput() {
     this.store$.dispatch(ExploreActions.loadCars());
@@ -35,10 +35,5 @@ export class FullscreenPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.store$.dispatch(ExploreActions.initCars());
-
-    this.carService.activeCar$.subscribe((value: number) => {
-      this.activeCar = value;
-    })
-    this.activeCar = 0;
   }
 }

@@ -25,7 +25,7 @@ export class CarService {
   private _values$ = new BehaviorSubject(randomValues());
   values$ = this._values$.asObservable();
 
-  private _activeCar$ = new BehaviorSubject(2);
+  private _activeCar$ = new BehaviorSubject(0);
   activeCar$ = this._activeCar$.asObservable();
 
   currentOutputBlob$ = this.values$.pipe(
@@ -65,7 +65,7 @@ export class CarService {
       );
   }
 
-  addBorder(index: number){
+  setActive(index: number){
     this._activeCar$.next(index);
   }
 
