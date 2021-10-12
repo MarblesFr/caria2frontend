@@ -25,6 +25,9 @@ export class CarService {
   private _values$ = new BehaviorSubject(randomValues());
   values$ = this._values$.asObservable();
 
+  private _activeCar$ = new BehaviorSubject(2);
+  activeCar$ = this._activeCar$.asObservable();
+
   currentOutputBlob$ = this.values$.pipe(
     filterUndefined(),
     debounceTime(50),
@@ -60,6 +63,10 @@ export class CarService {
       ).subscribe(
         values => this.updateValues(values)
       );
+  }
+
+  addBorder(index: number){
+    this._activeCar$.next(index);
   }
 
   multipleValuesToCars(values: number[][]): Observable<Car[]> {

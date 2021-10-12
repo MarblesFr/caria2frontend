@@ -3,6 +3,9 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {RootState} from '../../services/root-state';
 import {ExploreActions, ExploreSelectors} from '../../services/explore-store';
+import {CarService} from "../../services/car-service/car.service";
+import {subscribeOn} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'caria-fullscreen-page',
@@ -15,10 +18,12 @@ export class FullscreenPageComponent implements OnInit{
   constructor(
     private router: Router,
     private readonly store$: Store<RootState>,
+    private carService: CarService
   ) {
   }
 
   cars$ = this.store$.select(ExploreSelectors.getCars);
+  activeCar: number;
 
   generateNewOutput() {
     this.store$.dispatch(ExploreActions.loadCars());
@@ -30,5 +35,10 @@ export class FullscreenPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.store$.dispatch(ExploreActions.initCars());
+
+    this.carService.activeCar$.subscribe((value: number) => {
+      this.activeCar = value;
+    })
+    this.activeCar = 0;
   }
 }

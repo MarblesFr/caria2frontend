@@ -102,8 +102,12 @@ export class ExploreEffects {
     this.actions$.pipe(
       ofType(setAsActive),
       concatMap((params) =>
-        this.store$.select(getCar, { index: params.index }).pipe(first(),
-          tap((car: Car) => this.carService.updateValues(car.values.slice())),
+        this.store$.select(getCar, { index: params.index }).pipe(
+          first(),
+          tap((car: Car) => {
+            this.carService.updateValues(car.values.slice());
+            this.carService.addBorder(params.index);
+          }),
           map(() => setAsActiveSuccess()),
           catchError(() => of(setAsActiveFailed()))
         )
