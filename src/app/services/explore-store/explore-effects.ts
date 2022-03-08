@@ -7,7 +7,9 @@ import {
   initCars,
   loadCars,
   loadCarsFailed,
-  loadCarsSuccess, loadCurrentCar, loadCurrentSuccess,
+  loadCarsSuccess,
+  loadCurrentCar,
+  loadCurrentSuccess,
   loadInitialCars,
   loadInitialCarsFailed,
   loadInitialCarsSuccess,
@@ -19,10 +21,8 @@ import {catchError, concatMap, delay, first, map, tap, withLatestFrom} from 'rxj
 import {ADD_AMOUNT, INITIAL_LOAD_AMOUNT, MAX_LOAD_AMOUNT} from './explore.config';
 import {randomValues} from '../../util/caria.util';
 import {Car} from '../../models';
-import {getCar} from './explore.selectors';
+import {getCar, getCars} from './explore.selectors';
 import {of} from 'rxjs';
-import {ExploreSelectors} from './index';
-
 
 @Injectable()
 export class ExploreEffects {
@@ -56,7 +56,7 @@ export class ExploreEffects {
   initCars$ = createEffect(() =>
     this.actions$.pipe(
       ofType(initCars),
-      concatMap(() => this.store$.select(ExploreSelectors.getCars).pipe(first())),
+      concatMap(() => this.store$.select(getCars).pipe(first())),
       map((cars) => {
         if (cars.length === 0) {
           return loadInitialCars({amount: INITIAL_LOAD_AMOUNT});
