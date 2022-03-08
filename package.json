@@ -12,7 +12,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:gitlab": "ng build",
-    "test:chromeHeadless": "npm run test --browsers ChromeHeadless -single-run"
+    "test:chromeHeadless": "npm run test --browsers ChromeHeadless -single-run",
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
