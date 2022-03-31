@@ -42,21 +42,6 @@
   scrollbar-color: #e8e4ea transparent; //this is for firefox only
 
   .explore-output{
-    transition: transform 10s ease;
-    animation: 1.5s ease 1s 1 showScrollability;
-
-    @keyframes showScrollability{
-      0% {
-        transform: translateY(0);
-      }
-      50%{
-        transform: translateY(-15px);
-      }
-      100%{
-        transform: translateY(0);
-      }
-    }
-
     .explore-row{
       margin-bottom: 16px;
 
@@ -68,6 +53,12 @@
           width: 100%;
           z-index: 0;
           cursor: pointer;
+          border: 6px solid transparent;
+
+          &.activeCar{
+            border: 6px solid #C6D8FF;
+            border-radius: 10px;
+          }
         }
       }
     }
@@ -85,9 +76,4 @@
 .explore-card::-webkit-scrollbar-thumb{
   background-color: inherit;
   border-radius: 20px;
-}
-
-.activeCar{
-  border: 6px solid #C6D8FF;
-  border-radius: 10px;
 }
